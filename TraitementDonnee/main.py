@@ -21,10 +21,11 @@ if response.status_code == 200:
 
     # Utilisez RDKit pour lire le contenu décompressé directement depuis la mémoire
     supplier = Chem.SDMolSupplier()
-    supplier.SetData(decompressed_content)
+    supplier.SetData(decompressed_content )
 
+    molecules_with_cycles = [mol for mol in supplier if mol and mol.GetRingInfo().NumRings() > 0]
     # Iterez à travers les molécules dans le fichier SDF
-    for idx, mol in enumerate(supplier):
+    for idx, mol in enumerate(molecules_with_cycles):
         if mol is not None:
             # Créez une chaîne contenant les données SDF de la molécule
             sdf_data = Chem.MolToMolBlock(mol)
