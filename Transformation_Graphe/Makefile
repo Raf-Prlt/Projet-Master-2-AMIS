@@ -9,7 +9,17 @@ main.o: main.c
 
 clean:
 	rm -f *.o main
+	rm -f *.o test
+
+runtest: test
+	./test
+
+test: test.o
+	gcc -o test test.o 
+
+test.o: test.c
+	gcc -c test.c 
 
 valgrind: main
-	valgrind ./main
+	valgrind ./main --track-origins=yes
 
