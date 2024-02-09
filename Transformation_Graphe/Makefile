@@ -21,5 +21,5 @@ test.o: test.c
 	gcc -c test.c 
 
 valgrind: main
-	valgrind ./main --track-origins=yes
+	valgrind ./main
 

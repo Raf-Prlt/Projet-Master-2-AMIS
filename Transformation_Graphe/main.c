@@ -5,30 +5,34 @@
 #include "gmol.h"
 
 // Fonction pour allouer la mémoire pour la structure
-struct Molecular_graph* allocateMolecularGraph(int nb_atomes, int nb_liaisons) {
+struct Molecular_graph* allocateMolecularGraph(int nv, int nde) {
     struct Molecular_graph* mol_graph = malloc(sizeof(struct Molecular_graph));
 
     if (mol_graph != NULL) {
-        mol_graph->nb_atomes = nb_atomes;
-        mol_graph->nb_liaisons = nb_liaisons;
+        mol_graph->nv = nv;
+        mol_graph->nde = nde;
 
-        mol_graph->degres = malloc(nb_atomes * sizeof(int));
-        mol_graph->liaison_id1 = malloc(nb_liaisons * sizeof(int));
-        mol_graph->liaison_id2 = malloc(nb_liaisons * sizeof(int));
-        mol_graph->type_laison = malloc(nb_liaisons * sizeof(int));
-        mol_graph->symb_atom = malloc(nb_atomes * sizeof(char*));
+        mol_graph->d = malloc(nv * sizeof(int));
+        mol_graph->liaison_id1 = malloc(nde * sizeof(int));
+        mol_graph->liaison_id2 = malloc(nde * sizeof(int));
+        mol_graph->w = malloc(nde * sizeof(int));
+        mol_graph->symb_atom = malloc(nv * sizeof(char*));
+        for (int i = 0; i< nv; i++) {
+            mol_graph->symb_atom[i] = malloc(2*sizeof(char));
+        }
+
         mol_graph->chebi_name = NULL;  // Pas besoin d'allouer de la mémoire ici
     }
 
     return mol_graph;
 }
 
-// Fonction pour allouer la mémoire pour le champ voisins
-void allocateVoisins(struct Molecular_graph* mol_graph) {
-    mol_graph->voisins = malloc(mol_graph->nb_atomes * sizeof(int*));
+// Fonction pour allouer la mémoire pour le champ e
+void allocatee(struct Molecular_graph* mol_graph) {
+    mol_graph->e = malloc(mol_graph->nv * sizeof(int*));
 
-    for (int i = 0; i < mol_graph->nb_atomes; i++) {
-        mol_graph->voisins[i] = malloc(mol_graph->degres[i] * sizeof(int));
+    for (int i = 0; i < mol_graph->nv; i++) {
+        mol_graph->e[i] = malloc(mol_graph->d[i] * sizeof(int));
     }
 }
 
@@ -37,70 +41,78 @@ void allocateVoisins(struct Molecular_graph* mol_graph) {
 void freeMolecularGraph(struct Molecular_graph* mol_graph) {
     if (mol_graph != NULL) {
 
-        if (mol_graph->voisins != NULL) {
-            for (int i = 0; i < mol_graph->nb_atomes; i++) {
-                free(mol_graph->voisins[i]);
+        if (mol_graph->e != NULL) {
+            for (int i = 0; i < mol_graph->nv; i++) {
+                free(mol_graph->e[i]);
             }
-            free(mol_graph->voisins);
+            free(mol_graph->e);
         }        
-        free(mol_graph->degres);
+        free(mol_graph->d);
         free(mol_graph->liaison_id1);
         free(mol_graph->liaison_id2);
-        free(mol_graph->type_laison);
+        free(mol_graph->w);
+        for (int i = 0; i < mol_graph->nv; i++) {
+            free(mol_graph->symb_atom[i]);
+        }
         free(mol_graph->symb_atom);
-        free(mol_graph->chebi_name);
         free(mol_graph);
     }
 }
 
 void printMolecularGraph(const struct Molecular_graph* mol_graph) {
     if (mol_graph != NULL) {
-        printf("Nombre d'atomes : %d\n", mol_graph->nb_atomes);
-        printf("Nombre de liaisons : %d\n", mol_graph->nb_liaisons);
+        printf("Nombre d'atomes : %d\n", mol_graph->nv);
+        printf("Nombre de liaisons : %d\n", mol_graph->nde);
 
         printf("Degrés des atomes : ");
-        for (int i = 0; i < mol_graph->nb_atomes; i++) {
-            printf("%d ", mol_graph->degres[i]);
+        for (int i = 0; i < mol_graph->nv; i++) {
+            printf("%d ", mol_graph->d[i]);
         }
         printf("\n");
 
         printf("Indices des atomes pour chaque liaison : ");
-        for (int i = 0; i < mol_graph->nb_liaisons; i++) {
+        for (int i = 0; i < mol_graph->nde; i++) {
             printf("(%d, %d) ", mol_graph->liaison_id1[i], mol_graph->liaison_id2[i]);
         }
         printf("\n");
 
         printf("Types de liaisons : ");
-        for (int i = 0; i < mol_graph->nb_liaisons; i++) {
-            printf("%d ", mol_graph->type_laison[i]);
-        }
-        printf("\n");
-
-        printf("Indices des voisins pour chaque atome : \n");
-        for (int i = 0; i < mol_graph->nb_atomes; i++) {
-            printf("%d: ",i+1);
-            for (int j = 0; j < mol_graph->degres[i]; j++){
-                printf("%d ", mol_graph->voisins[i][j]);
-            }
-            printf("\n");
+        for (int i = 0; i < mol_graph->nde; i++) {
+            printf("%d ", mol_graph->w[i]);
         }
         printf("\n");
 
         printf("Symboles d'atomes : ");
-        for (int i = 0; i < mol_graph->nb_atomes; i++) {
-            printf("%c ", mol_graph->symb_atom[i]);
+        for (int i = 0; i < mol_graph->nv; i++) {
+            printf("%s ", mol_graph->symb_atom[i]);
         }
         printf("\n");
+        /*
+        int nb_e = 0;
+        printf("Indices des e pour chaque atome : \n");
+        for (int i = 0; i < mol_graph->nv; i++) {
+            printf("%3d: ",i+1);
+            for (int j = 0; j < mol_graph->d[i]; j++){
+                printf("%3d ", mol_graph->e[i][j]);
+                nb_e++;
+            }
+            printf("\n");
+        }
+        printf("\n");*/
 
         printf("Nom ChEBI : %s\n", mol_graph->chebi_name);
-        printf("ID ChEBI : %d\n", mol_graph->chebi_id);
+        printf("ID ChEBI : %d\n Vérif e: ", mol_graph->chebi_id);
+        /*if(nb_e == mol_graph->nde*2) {printf("Cool !");}
+        else {printf("Pas cool");}*/
+        printf("\n");
     }
 }
 
 int main() {
     DIR *directory;
     struct dirent *entry;
-    directory = opendir("../TraitementDonnee/test/"); // à modifier quand ce sera bon (remplacer test par output_molecules)
+    char *dir_name = "../TraitementDonnee/output_molecules/";
+    directory = opendir(dir_name);
     if (!directory) {
         printf("Impossible d'ouvrir le dossier");
         exit(1);
@@ -114,12 +126,12 @@ int main() {
 
             // Construit le chemin complet du fichier
             char filepath[512];
-            snprintf(filepath, sizeof(filepath), "../TraitementDonnee/test/%s", entry->d_name); // à modifier quand ce sera bon
+            snprintf(filepath, sizeof(filepath), "../TraitementDonnee/output_molecules/%s", entry->d_name);
             FILE *file = fopen(filepath, "r");
             if (!file) {
                 printf("Impossible d'ouvrir le fichier");
             }
-            
+
             //Transformation en graphe moléculaire
 
 
@@ -127,90 +139,93 @@ int main() {
             char buffer[100];
             fgets(buffer, sizeof(buffer), file);
             fgets(buffer, sizeof(buffer), file);
-            
-            int nb_atomes, nb_liaisons;
-            // Essayer de lire avec la première spécification de format
-            fscanf(file, "%3d%3d", &nb_atomes, &nb_liaisons);
 
-            if (nb_atomes == 0 || nb_liaisons == 0) {
+            int nv, nde;
+            long int position_before = ftell(file);  // Enregistrez la position actuelle du curseur
+
+            // Essayer de lire avec la première spécification de format
+            fscanf(file, "%3d%3d", &nv, &nde);
+
+            if (nv == 0 || nde == 0) {
                 // La lecture n'a pas réussi à obtenir deux nombres ou les nombres sont nuls
-                //printf("Problème lecture\n");
+                //printf("Problème lecture: Il y a %d atomes, et %d liaisons\n",nv, nde);
                 // Remettre le curseur de fichier au début du champ de données
-                fseek(file, -6L, SEEK_CUR);
+                fseek(file, position_before, SEEK_SET);
 
                 // Essayer de lire avec la deuxième spécification de format
                 fgets(buffer, sizeof(buffer), file);
                 fgets(buffer, sizeof(buffer), file);
-                fscanf(file, " %2d%3d", &nb_atomes, &nb_liaisons);
+                fscanf(file, " %2d%3d", &nv, &nde);
             }
             fgets(buffer, sizeof(buffer), file);
             /*
-            if(!nb_atomes && !nb_liaisons)
+            if(!nv && !nde)
             {
                 printf("Fichier %18s:Pas d'atome ni de liaison\n", entry->d_name);
             }
             
-            else if (!nb_atomes)
+            else if (!nv)
             {
                 printf("Fichier %18s:Pas d'atome\n", entry->d_name);
             }
-            else if (!nb_liaisons)
+            else if (!nde)
             {
                 printf("Fichier %18s:Pas de liaison\n", entry->d_name);
-            } */           
-            //printf("Il y a %d atomes, et %d liaisons\n",nb_atomes, nb_liaisons);
-            
-            struct Molecular_graph *graph = allocateMolecularGraph(nb_atomes, nb_liaisons);
+            } */     
 
-            
+            printf("Il y a %d atomes, et %d liaisons\n",nv, nde);
+
+
+            struct Molecular_graph *graph = allocateMolecularGraph(nv, nde);
             int i = 0;
             // Enregistrement des atomes
-            while (i < graph->nb_atomes) {
+            while (i < nv) {
                 //atomes[i].Id = i+1;
-                fscanf(file, "%*f %*f %*f %s", &graph->symb_atom[i]);
-                //printf("Symbole de l'atome n°%d : %s\n",atomes[i].Id, atomes[i].symbole);
+                fscanf(file, "%*f %*f %*f %s", graph->symb_atom[i]);
+                printf("Symbole de l'atome n°%d : %s\n",i+1, graph->symb_atom[i]);
                 fgets(buffer, sizeof(buffer), file);
 
                 i++;
             }
-            for (int k = 0; k < nb_atomes; k++) {
-                graph->degres[k] = 0;
-            }
 
             // Enregistrement des liaisons
             int j = 0;
-            while (j < graph->nb_liaisons) {
-                int id1, id2, type;
-                fscanf(file, "%d %d %d", &id1, &id2, &type);
-                //printf("Liaison entre les atomes n°%2d et n°%2d, de type %d\n",liaisons[j].IdA1, liaisons[j].IdA2, liaisons[j].Poids);
-                graph->liaison_id1[j] = id1;
-                graph->liaison_id2[j] = id2;
-                graph->type_laison[j] = type;
+            while (j < nde) {
+                long int position_before = ftell(file);  // Pour avoir la position actuelle du curseur
 
-                graph->degres[id1-1] ++;
-                graph->degres[id2-1] ++;
-
+                // Essayer de lire les indices
+                fscanf(file, "\n%3d%3d %d", &graph->liaison_id1[j], &graph->liaison_id2[j], &graph->w[j]);
+                if(graph->liaison_id1[j] == 0 || graph->liaison_id2[j] == 0 || graph->w[j] == 0
+                    || graph->liaison_id1[j] > nv || graph->liaison_id2[j] > nv) {
+                    // La lecture n'a pas réussi ou les indices ne sont pas valides, on revient au début de la ligne
+                    fseek(file, position_before, SEEK_SET);
+                    fscanf(file, "\n %2d%3d %d", &graph->liaison_id1[j], &graph->liaison_id2[j], &graph->w[j]);
+                }
                 fgets(buffer, sizeof(buffer), file);
 
+                printf("Liaison n°%d: entre les atomes n°%3d et n°%3d, de type %d\n", j+1, graph->liaison_id1[j], graph->liaison_id2[j], graph->w[j]);
+                graph->d[graph->liaison_id1[j]-1]++;
+                graph->d[graph->liaison_id2[j]-1]++;
                 j++;
+
             }
 
-            allocateVoisins(graph);
-            // remplissage du tableau voisins
-            for (int i = 0; i < nb_atomes; i++) {
-                for (int j = 0; j < graph->degres[i]; j++) {
-                    graph->voisins[i][j] = 0;
+            allocatee(graph);
+            // remplissage du tableau e
+            for (int i = 0; i < nv; i++) {
+                for (int j = 0; j < graph->d[i]; j++) {
+                    graph->e[i][j] = 0;
                 }
             }
-            int * degre_temp = malloc(nb_atomes * sizeof(int));
-            for (int i = 0; i < nb_liaisons; i++) {
+            int * degre_temp = malloc(nv * sizeof(int));
+            for (int i = 0; i < nde; i++) {
                 degre_temp[graph->liaison_id1[i]]++;
                 degre_temp[graph->liaison_id2[i]]++;
-                graph->voisins[graph->liaison_id1[i]-1][degre_temp[graph->liaison_id1[i]]-1] = graph->liaison_id2[i];
-                graph->voisins[graph->liaison_id2[i]-1][degre_temp[graph->liaison_id2[i]]-1] = graph->liaison_id1[i];
+                graph->e[graph->liaison_id1[i]-1][degre_temp[graph->liaison_id1[i]]-1] = graph->liaison_id2[i];
+                graph->e[graph->liaison_id2[i]-1][degre_temp[graph->liaison_id2[i]]-1] = graph->liaison_id1[i];
             }
             free(degre_temp);
-            
+
             char* balise_id = "<ChEBI ID>"; // Balise de l'id à chercher
             graph->chebi_id = -1; // Valeur par défaut si non trouvée
 
@@ -218,16 +233,16 @@ int main() {
                 // Vérifie si la ligne contient la balise
                 if (strstr(buffer, balise_id) != NULL) {
                     fscanf(file, "%*[^0123456789]%d", &graph->chebi_id);
-                    //printf("ChEBI ID: %d\n", molecular_graph->chebi_id);
+                    printf("ChEBI ID: %d\n", graph->chebi_id);
 
                     break;
                 }
             }
-            /*
+
             if (graph->chebi_id == -1) {
-                printf("Fichier %18s: Balise ID non trouvée\n", entry->d_name);
-            }*/
-            
+                printf("Erreur: Balise non trouvée\n");
+            }
+
             char* balise_name = "<ChEBI Name>"; // Balise du nom à chercher
             while (fgets(buffer, sizeof(buffer), file) != NULL) {
                 // Vérifie si la ligne contient la balise
@@ -243,18 +258,19 @@ int main() {
                             graph->chebi_name = strdup(start);
                         }
                     }
-                    //printf("ChEBI name: %s\n", molecular_graph->chebi_name);
+                    printf("ChEBI name: %s\n", graph->chebi_name);
 
                     break;
                 }
             }
-            /*
-            if(!graph->chebi_name){
-                printf("Fichier %18s: Balise name non trouvée\n", entry->d_name);
-            }*/
+
+
             printMolecularGraph(graph);
-            freeMolecularGraph(graph);
+            printf("Fermeture fichier %18s\n\n", entry->d_name);
+            //freeMolecularGraph(graph);
+            fclose(file);
         }
+
     }
 
     closedir(directory);

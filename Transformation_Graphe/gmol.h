@@ -40,14 +40,14 @@ Structure sparsegraph:
 */
 
 struct Molecular_graph {
-    int nb_atomes;          // (nv) Nombre d'atomes 
-    int nb_liaisons;        // (nde) Nombre de liaisons
-    int *degres;            // (d) Tableau des degrés pour chaque atome
+    int nv;                 // (nv) Nombre d'atomes 
+    int nde;                // (nde) Nombre de liaisons
+    int *d;                 // (d) Tableau des degrés pour chaque atome
     int *liaison_id1;       // Tableau des indices du 1er atome pour chaque liaison
     int *liaison_id2;       // Tableau des indices du 2nd atome pour chaque liaison
-    int *type_laison;       // (w) Tableau des types de liaisons pour chaque arête
-    int **voisins;           // (e) Tableau des indices des voisins pour chaque atome
-    char *symb_atom;        // Tableau de chaînes de caractères pour les symboles des atomes
+    int *w;                 // (w) Tableau des types de liaisons pour chaque arête
+    int **e;                // (e) Tableau des indices des voisins pour chaque atome
+    char **symb_atom;       // Tableau de chaînes de caractères pour les symboles des atomes
     char *chebi_name; 
     int chebi_id;           
 };
