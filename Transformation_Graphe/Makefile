@@ -6,16 +6,21 @@ run: main
 	./main
 
 main: $(OBJ) 
-	gcc -o $@ $^  
+	gcc -o $@ -Lnauty2_8_8/ $^  nauty2_8_8/nauty.a 
 
 # main.o: main.c
-#	gcc -c  main.c $(CFLAGS)
+# 	gcc -c  main.c $(CFLAGS)
 
 %.o: %.c 
-	gcc -o $@ -c $< $(CFLAGS)
+	gcc -g -o $@ -c $< $(CFLAGS)
 
 clean:
 	rm -f *.o main
 
 valgrind: main
-	valgrind ./main
+	valgrind --track-origins=yes ./main
+
+debug: $(OBJ) 
+	gcc -g -o $@ -Lnauty2_8_8/ $^  nauty2_8_8/nauty.a 
+	gdb ./debug
+
