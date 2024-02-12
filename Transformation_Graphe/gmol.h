@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
+
 struct Atome{
     int Id;             //Numéro dans le fichier sdf
-    int NumeroAtomique;
-    char symbole[3];    // trouver un moyen de transformer ça en num atomique 
-    struct Atome* voisins;    
+    char symbole[2];    // trouver un moyen de transformer ça en num atomique 
+    int degre;
+    //struct Atome* voisins;    
     // liaisons, autres infos...
 };
 
 struct g_mol{
     int Id;         //ChEBI ID
     char* name;    
+    int nb_atomes;
+    int nb_liaisons;
     struct Atome* Atomes; 
+    struct Liaison* liaisons;
 };
 
 struct Liaison{
@@ -21,7 +24,7 @@ struct Liaison{
     int IdA2;   
     int Poids;  
 };
-*/
+
 
 /*
 Structure sparsegraph:
@@ -51,3 +54,6 @@ struct Molecular_graph {
     char *chebi_name; 
     int chebi_id;           
 };
+
+void gmol();
+struct g_mol read_g_mol(char* filename);
