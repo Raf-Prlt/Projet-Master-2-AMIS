@@ -18,7 +18,8 @@ clean:
 	rm -f *.o main
 
 valgrind: main
-	valgrind --track-origins=yes ./main
+	valgrind --track-origins=yes  ./main
+#--exit-on-first-error=yes
 
 debug: $(OBJ) 
 	gcc -g -o $@ -Lnauty2_8_8/ $^  nauty2_8_8/nauty.a 

@@ -16,8 +16,8 @@ void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg) {
     sg->d[i] = a.degre;
     sg->v[i] = j;
     for (int k = 0; k < a.degre; k++) {
-      sg->e[j + k] =
-          a.voisinsIds[k]; // ici on doit avoir la propriété Atome[i].Id == i
+      sg->e[j + k] = a.voisinsIds[k] - 1;
+      // ici on doit avoir la propriété Atome[i].Id == i
     }
     j = j + a.degre;
   }
@@ -74,6 +74,11 @@ void mcKay(struct g_mol *g, sparsegraph *cg) {
   DYNALLOC1(int, orbits, orbits_sz, sg.nv, "malloc");
 
   sparsenauty(&sg, lab, ptn, orbits, &options, &stats, cg);
+
+  SG_FREE(sg);
+  DYNFREE(lab, lab_sz);
+  DYNFREE(ptn, ptn_sz);
+  DYNFREE(orbits, orbits_sz);
 }
 
 void init_path(chemin *c, int n, int m) {
@@ -118,16 +123,8 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
         current[j] = next[j];
       }
       size_next = 0;
-      // printf("size_current = %d \n", size_current);
-      // printf("current = [");
-      // for (int j = 0; j < size_current; j++) {
-      //   printf("%d, ", current[j]);
-      // }
-      // printf("]\n");
       for (int j = 0; j < size_current; j++) {
         int s = current[j];
-        // printf("s: %d, ", s);
-        // fflush(stdout);
         deja_vu[s] = 1;
         int degre = sg->d[s];
         int start = sg->v[s];
@@ -146,24 +143,18 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
               }
             }
             if (in == 0) {
-              // printf("oxo succ: %d, size_next: %d ", succ, size_next);
               next[size_next] = succ;
               size_next++;
             }
             chemin *c = &ps_cts_chms[i][succ];
-            // printf("c->taille = %d, ", c->taille);
             if (c->taille == 0) {
               c->taille = taille_chemin + 1;
               for (int l = 0; l < taille_chemin; l++) {
                 c->atomesIds[l] = atomesIds_chemin[l];
               }
-              // printf("coucou7 ");
-              // fflush(stdout);
               for (int l = 0; l < m; l++) {
                 c->liaisons[l] = liaisons_chemin[l];
               }
-              // printf("coucou8 ");
-              // fflush(stdout);
               c->atomesIds[taille_chemin] = s;
               c->liaisons[start + k] = 1;
               // printf("(%d, %d) ", i, succ);

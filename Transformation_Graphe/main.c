@@ -8,23 +8,29 @@
 int main() {
   DIR *directory;
   struct dirent *entry;
-  directory = opendir("../TraitementDonnee/test/"); // à modifier quand ce sera
-                                                    // bon (remplacer test par
-                                                    // output_molecules)
+  directory = opendir(
+      "../TraitementDonnee/output_molecules/"); // à modifier quand ce sera
+                                                // bon (remplacer test par
+                                                // output_molecules)
   if (!directory) {
     printf("Impossible d'ouvrir le dossier");
     exit(1);
   }
-
+  int nb_mol_vues = 0;
   // Lit chaque fichier dans le dossier
   while ((entry = readdir(directory)) != NULL) {
+    printf("--------------------------------- Molécule n°%d "
+           "---------------------------------\n",
+           nb_mol_vues);
+    nb_mol_vues++;
 
     // Vérifie si le fichier est un fichier .sdf
     if (strstr(entry->d_name, ".sdf") != NULL) {
 
       // Construit le chemin complet du fichier
       char filepath[512];
-      snprintf(filepath, sizeof(filepath), "../TraitementDonnee/test/%s",
+      snprintf(filepath, sizeof(filepath),
+               "../TraitementDonnee/output_molecules/%s",
                entry->d_name); // à modifier quand ce sera bon
       FILE *file = fopen(filepath, "r");
       if (!file) {
@@ -47,36 +53,43 @@ int main() {
       }
 
       // Algorithme de McKay
-      SG_DECL(cg);
-      mcKay(molecule, &cg);
-      print_sg(&cg);
-      int aie = 0;
-      for (int i = 0; i < cg.nde; i++) {
-        if (cg.e[i] >= cg.nv) {
-          printf("Mais c'est n'importe quoi !");
-          aie = 1;
-        }
-      }
-      if (aie == 0) {
-        chemin **tab = malloc(molecule->nb_atomes * sizeof(chemin *));
-        for (int i = 0; i < molecule->nb_atomes; i++) {
-          tab[i] = malloc(molecule->nb_atomes * sizeof(chemin));
-          for (int j = 0; j < molecule->nb_atomes; j++) {
-            init_path(&tab[i][j], molecule->nb_atomes,
-                      2 * molecule->nb_liaisons);
+      if (molecule->nb_atomes < 600) {
+        SG_DECL(cg);
+        mcKay(molecule, &cg);
+        print_sg(&cg);
+
+        int aie = 0;
+        for (int i = 0; i < cg.nde; i++) {
+          if (cg.e[i] >= cg.nv) {
+            printf("Mais c'est n'importe quoi !");
+            aie = 1;
           }
         }
 
-        smallest_paths(&cg, tab);
-
-        for (int i = molecule->nb_atomes - 1; i >= 0; i--) {
-          for (int j = molecule->nb_atomes - 1; j >= 0; j--) {
-            free_path(&tab[i][j]);
+        // Plus courts chemins
+        if (aie == 0) {
+          chemin **tab = malloc(molecule->nb_atomes * sizeof(chemin *));
+          for (int i = 0; i < molecule->nb_atomes; i++) {
+            tab[i] = malloc(molecule->nb_atomes * sizeof(chemin));
+            for (int j = 0; j < molecule->nb_atomes; j++) {
+              init_path(&tab[i][j], molecule->nb_atomes,
+                        2 * molecule->nb_liaisons);
+            }
           }
-          free(tab[i]);
+
+          smallest_paths(&cg, tab);
+
+          for (int i = molecule->nb_atomes - 1; i >= 0; i--) {
+            for (int j = molecule->nb_atomes - 1; j >= 0; j--) {
+              free_path(&tab[i][j]);
+            }
+            free(tab[i]);
+          }
+          free(tab);
         }
-        free(tab);
+        SG_FREE(cg);
       }
+
       // Free et fermeture du fichier
       freeMolecule(molecule, molecule->nb_atomes);
       printf("Fermeture du fichier %18s\n", entry->d_name);

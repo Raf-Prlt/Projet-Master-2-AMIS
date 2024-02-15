@@ -41,5 +41,6 @@ void print_path(chemin *c, int m);
 void init_path(chemin *c, int n, int m);
 void free_path(chemin *c);
 void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms);
+void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg);
 
 #endif

@@ -7,7 +7,7 @@
 
 void ajouterVoisin(struct Atome *atome, int voisinId) {
   atome->voisinsIds =
-      realloc(atome->voisinsIds, (atome->degre + 1) * sizeof(int));
+      realloc(atome->voisinsIds, ((atome->degre) + 1) * sizeof(int));
   atome->voisinsIds[atome->degre] = voisinId;
   atome->degre++;
 }
@@ -83,7 +83,9 @@ void freeMolecule(struct g_mol *molecule, int nb_atomes) {
   }
   free(molecule->Atomes);
   free(molecule->liaisons);
-  free(molecule->name);
+  if (molecule->name != NULL) {
+    free(molecule->name);
+  }
   free(molecule);
 }
 
@@ -95,48 +97,70 @@ struct g_mol *gmol(FILE *file) {
   char buffer[100];
   fgets(buffer, sizeof(buffer), file);
   fgets(buffer, sizeof(buffer), file);
-
-  int nb_atomes, nb_liaisons;
   long int position_before =
       ftell(file); // Enregistrez la position actuelle du curseur
 
-  // Essayer de lire avec la première spécification de format
-  fscanf(file, "%3d%3d", &nb_atomes, &nb_liaisons);
+  fseek(file, position_before + 1, SEEK_SET);
+  int nb_atomes, nb_liaisons;
 
-  if (nb_atomes == 0 || nb_liaisons == 0) {
-    // La lecture n'a pas réussi à obtenir deux nombres ou les nombres sont nuls
-    // printf("Problème lecture: Il y a %d atomes, et %d liaisons\n",nb_atomes,
-    // nb_liaisons);
-    // Remettre le curseur de fichier au début du champ de données
-    fseek(file, position_before, SEEK_SET);
+  char str[7]; // On utilise 7 caractères pour stocker les 6 caractères + le
+               // caractère nul '\0'
 
-    // Essayer de lire avec la deuxième spécification de format
-    fgets(buffer, sizeof(buffer), file);
-    fgets(buffer, sizeof(buffer), file);
-    fscanf(file, " %2d%3d", &nb_atomes, &nb_liaisons);
+  // Lire un ensemble de 6 caractères depuis le fichier
+  size_t elements_lus = fread(str, sizeof(char), 6, file);
+
+  if (elements_lus != 6) {
+    perror("Erreur lors de la lecture du fichier");
+    fclose(file);
+    return NULL;
   }
+
+  // Ajouter le caractère nul à la fin
+  str[6] = '\0';
+
+  // Extraire le nombre d'atomes et de liaisons
+  char atomStr[4], bondStr[4];
+
+  if (str[0] == '\n') { // problème décalage lecture
+    // Extraire le nombre d'atomes et de liaisons
+    strncpy(atomStr, str + 1, 3);
+    atomStr[3] = '\0'; // Ajout du caractère nul à la fin
+    strncpy(bondStr, str + 4, 3);
+    bondStr[3] = '\0'; // Ajout du caractère nul à la fin
+  } else {
+    // Extraire le nombre d'atomes et de liaisons
+    strncpy(atomStr, str, 3);
+    atomStr[3] = '\0'; // Ajout du caractère nul à la fin
+    strncpy(bondStr, str + 3, 3);
+    bondStr[3] = '\0'; // Ajout du caractère nul à la fin
+  }
+  // Convertir les chaînes en entiers
+  nb_atomes = atoi(atomStr);
+  nb_liaisons = atoi(bondStr);
+
   fgets(buffer, sizeof(buffer), file);
   /*
   if(!nb_atomes && !nb_liaisons)
   {
-      printf("Fichier %18s:Pas d'atome ni de liaison\n", entry->d_name);
+          printf("Fichier %18s:Pas d'atome ni de liaison\n", entry->d_name);
   }
 
   else if (!nb_atomes)
   {
-      printf("Fichier %18s:Pas d'atome\n", entry->d_name);
+          printf("Fichier %18s:Pas d'atome\n", entry->d_name);
   }
   else if (!nb_liaisons)
   {
-      printf("Fichier %18s:Pas de liaison\n", entry->d_name);
+          printf("Fichier %18s:Pas de liaison\n", entry->d_name);
   } */
+  printf("Il y a %d atomes et %d liaisons.\n", nb_atomes, nb_liaisons);
 
-  printf("Il y a %d atomes, et %d liaisons\n", nb_atomes, nb_liaisons);
   struct Atome *atomes = NULL;
   atomes = malloc(nb_atomes * sizeof(struct Atome));
   struct Liaison *liaisons = NULL;
   liaisons = malloc(nb_liaisons * sizeof(struct Liaison));
   int i = 0;
+
   // Enregistrement des atomes
   while (i < nb_atomes) {
     atomes[i].Id = i + 1;
@@ -179,21 +203,33 @@ struct g_mol *gmol(FILE *file) {
   molecule->nb_liaisons = nb_liaisons;
   molecule->Atomes = atomes;
   molecule->liaisons = liaisons;
+  molecule->name = NULL;
 
   // Remplissage des voisins
   for (int i = 0; i < nb_atomes; i++) {
     molecule->Atomes[i].degre = 0;
     molecule->Atomes[i].voisinsIds = NULL;
   }
-  // for (int j = 0; j < nb_liaisons; j++) {
-  //   molecule->Atomes[molecule->liaisons[j].IdA1 - 1].degre++;
-  //   molecule->Atomes[molecule->liaisons[j].IdA2 - 1].degre++;
-  // }
-
-  for (int i = 0; i < nb_liaisons; i++) {
-    ajouterVoisin(&atomes[liaisons[i].IdA1 - 1], liaisons[i].IdA2);
-    ajouterVoisin(&atomes[liaisons[i].IdA2 - 1], liaisons[i].IdA1);
+  for (int j = 0; j < nb_liaisons; j++) {
+    molecule->Atomes[molecule->liaisons[j].IdA1 - 1].degre++;
+    molecule->Atomes[molecule->liaisons[j].IdA2 - 1].degre++;
   }
+  for (int i = 0; i < nb_atomes; i++) {
+    molecule->Atomes[i].voisinsIds =
+        malloc(molecule->Atomes[i].degre * sizeof(int));
+  }
+  int *tmp_deg = calloc(nb_atomes, sizeof(int));
+  for (int i = 0; i < nb_liaisons; i++) {
+    molecule->Atomes[liaisons[i].IdA1 - 1]
+        .voisinsIds[tmp_deg[liaisons[i].IdA1 - 1]] = liaisons[i].IdA2;
+    tmp_deg[liaisons[i].IdA1 - 1]++;
+    molecule->Atomes[liaisons[i].IdA2 - 1]
+        .voisinsIds[tmp_deg[liaisons[i].IdA2 - 1]] = liaisons[i].IdA1;
+    tmp_deg[liaisons[i].IdA2 - 1]++;
+    // ajouterVoisin(&atomes[liaisons[i].IdA1 - 1], liaisons[i].IdA2);
+    // ajouterVoisin(&atomes[liaisons[i].IdA2 - 1], liaisons[i].IdA1);
+  }
+  free(tmp_deg);
 
   char *balise_id = "<ChEBI ID>"; // Balise de l'id à chercher
   molecule->Id = -1;              // Valeur par défaut si non trouvée
@@ -230,7 +266,7 @@ struct g_mol *gmol(FILE *file) {
       if (!molecule->name) {
         // printf("Erreur: ChEBI Name non trouvée\n");
       }
-      // printf("ChEBI name: %s\n", molecule->name);
+      printf("ChEBI name: %s\n", molecule->name);
 
       break;
     }
