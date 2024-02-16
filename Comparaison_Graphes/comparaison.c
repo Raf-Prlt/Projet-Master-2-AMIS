@@ -62,42 +62,78 @@ bool comparaisonNbreDeCycles(Graphe_Cycle g1, Graphe_Cycle g2){
     return false;
 }
 
-// Fonction pour comparer deux graphes de cycles sous le critère de la taille moyenne des cycles
-bool comparaisonTailleDeCycles(Graphe_Cycle g1, Graphe_Cycle g2){
-
+// Fonction pour comparer deux graphes de cycles sous le critère de la taille des cycles
+double comparaisonTailleDeCycles(Graphe_Cycle g1, Graphe_Cycle g2){
+    int cyclesIdentiques = 0;
     if(comparaisonNbreDeCycles(g1, g2)){
         for (int i = 0; i < g1.nb_cycles; i++)
         {
             if(g1.generateur[i].taille != g2.generateur[i].taille) {
-                return false;
+                i = g1.nb_cycles;
+            }else{
+                cyclesIdentiques++;
             }
         }
+        return (1 + (cyclesIdentiques/g1.nb_cycles));
+    } else {
+        int max;
+        int min;
+        if (g1.nb_cycles < g2.nb_cycles){
+            min = g1.nb_cycles;
+            max = g2.nb_cycles;
+        }else{
+            max = g1.nb_cycles;
+            min = g2.nb_cycles;
+        }
 
-    }    
-
-    return true;
+        for (int i = 0; i < min; i++){
+            if (g1.generateur[i].taille != g2.generateur[i].taille){
+                i = min;
+            }else{
+                cyclesIdentiques++;
+            } 
+        }   
+        return cyclesIdentiques/max;     
+        
+    }
+    return 0;
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du nombre de voisins
-bool comparaisonNbreVoisinsDeCycle(Graphe_Cycle g1, Graphe_Cycle g2){
-
-    if(comparaisonTailleDeCycles(g1, g2)){
+double comparaisonNbreVoisinsDeCycle(Graphe_Cycle g1, Graphe_Cycle g2){
+    int cyclesDegreIdentiques = 0;
+    if (comparaisonTailleDeCycles(g1, g2) == 2){
+        for (int i = 0; i < g1.nb_cycles; i++) {
+            if (g1.generateur[i].degre == g2.generateur[i].degre)
+            {
+                cyclesDegreIdentiques++;
+            }
+            
+        }
+        return  2+(cyclesDegreIdentiques/g1.nb_cycles);
+    }else{
         int degre1 = 0;
         int degre2 = 0;
         for (int i = 0; i < g1.nb_cycles; i++) {
             degre1 += g1.generateur[i].degre;
+        }
+        for (int i = 0; i < g2.nb_cycles; i++) {
             degre2 += g2.generateur[i].degre;
         }
-
         degre1 = degre1/g1.nb_cycles;
         degre2 = degre2/g2.nb_cycles;
-
+        
         if (degre1 == degre2) {
-            return true;
-        }       
-    }  
-
-    return false;  
+            return 0.8 + comparaisonTailleDeCycles(g1, g2);
+        }else if ((degre1 < (degre2+1)) && ((degre2-1) <= degre1)){
+            return 0.5 + comparaisonTailleDeCycles(g1, g2);
+        }else if ((degre1 < (degre2+2)) && ((degre2-2) <= degre1)){
+            return 0.1 + comparaisonTailleDeCycles(g1, g2);
+        }else{
+            return comparaisonTailleDeCycles(g1, g2);
+        }
+    }
+    return 0;  
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du poids moyen des liaisons entre les cycles
