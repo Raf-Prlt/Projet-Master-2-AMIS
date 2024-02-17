@@ -172,3 +172,163 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     free(current);
     free(next);
 }
+
+void Horton(sparsegraph *sg, chemin **c) {
+
+  printf("\nHello there\nGENERAL KENOBI\n");
+
+  printf("\nNb atome : %d\n",sg->nv);
+  printf("\nNb liaisons : %ld\n",sg->nde);
+
+  int nbA = sg->nde/2;
+
+  struct Liaison A[nbA];
+
+  init_liaisons(sg, A);
+
+  int cpt= 0;
+  
+
+  for (int i = 0; i < sg->nv; i++) {
+    for (int j = 0; j <nbA; j++) {
+      printf("\nFLAGGYFLAGGYFLAGFLAG %d\n", cpt);
+
+      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2])) {
+
+        cpt++;
+
+      }
+    }
+  }
+
+  struct Cycle Ci[cpt];
+  cpt = 0;
+
+  for (int i = 0; i < sg->nv; i++) {
+    for (int j = 0; j <sg->nde/2; j++) {
+
+      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2])) {
+
+        ajoutCycles(Ci, &c[i][A[j].IdA1], &c[i][A[j].IdA2], A[j], cpt);
+        cpt++;
+
+      }
+    }
+  }
+
+  printf("\n\nFLAGGY FLAG AVANT TRI\n\n");
+
+    for(int i = 0; i<cpt; i++) {
+    printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
+  }
+
+
+
+  TriCroissant(Ci, cpt);
+
+  printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
+
+
+  for(int i = 0; i<cpt; i++) {
+    printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
+  }
+
+
+
+}
+
+  void init_liaisons(sparsegraph *sg, struct Liaison A[]) {
+
+    int cptnbArete = 0;
+    int cptIDA1 = 0;
+    int TabOccurence[32] = {0};
+
+    for(int i = 0; i < sg->nde; i++) {
+
+      if (i >= sg->v[cptIDA1+1]) {
+        cptIDA1++;
+      }
+
+      if (TabOccurence[cptIDA1] < sg->d[cptIDA1] && TabOccurence[sg->e[i]] < sg->d[sg->e[i]]) {
+
+        A[cptnbArete].IdA1 = cptIDA1;
+        A[cptnbArete].IdA2 = sg->e[i];
+        A[cptnbArete].Poids = 1;
+
+        cptnbArete++;
+        TabOccurence[cptIDA1]++;
+        TabOccurence[sg->e[i]]++;
+      }
+
+    }
+
+    printf("\nNB LIAISONS = %d\n",cptnbArete);
+  }
+
+int verifIntersectionVide(chemin *c1, chemin *c2) {
+
+  for (int i = 1; i < c1->taille; i++) {
+    for (int j = 1; j < c2->taille; j++) {
+
+        if(c1->atomesIds[i] == c2->atomesIds[j]) {
+          return 0;
+        }
+    }
+  }
+
+  return 1;
+}
+
+void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur) {
+
+  Ci[compteur].liaisons = malloc (100 * sizeof(int));
+
+  Ci[compteur].Id = compteur;
+  Ci[compteur].taille = c1->taille + c2->taille + 1;
+  Ci[compteur].degre = 0;
+
+  int cpt = 0;
+
+  for (int i = 0; i < c1->taille; i++) {
+    Ci[compteur].liaisons[cpt] = c1->liaisons[i];
+    cpt++;
+  }
+
+  for (int i = 0; i < c2->taille; i++) {
+    Ci[compteur].liaisons[cpt] = c2->liaisons[i];
+    cpt++;
+  }
+
+    //Ci[compteur].liaisons[cpt] = a;
+
+  //printf("\nLe cycle à bien été ajouté\n");
+  //printf("\nCompteur : %d\tverif : %d\n",compteur, 29*32);
+
+}
+
+void TriCroissant(struct Cycle Ci[], int tailleTab) {
+
+
+
+  for(int i = 0; i < tailleTab; i++) {
+
+    int tailleMin = 100000000;
+    int indiceMin = 0;
+
+    for(int j = i; j < tailleTab; j++) {
+
+      if(Ci[j].taille < tailleMin) {
+        indiceMin = j;
+        tailleMin = Ci[j].taille;
+      }
+
+    }
+
+    struct Cycle tmp;
+    tmp = Ci[indiceMin];
+    Ci[indiceMin] = Ci[i];
+    Ci[i] = tmp;
+
+  }
+
+}
