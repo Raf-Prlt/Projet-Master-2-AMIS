@@ -7,32 +7,32 @@
 #include <stdlib.h>
 
 typedef struct Chemin {
-  int taille;
-  int *atomesIds;
-  int *liaisons;
+    int taille;
+    int *atomesIds;
+    int *liaisons;
 } chemin;
 
 struct Cycle {
-  int Id;
-  int taille; // nombres d'arêtes
-  int *liaisons;
-  int degre;
-  int *voisinsIds;
+    int Id;
+    int taille; // nombres d'arêtes
+    int *liaisons;
+    int degre;
+    int *voisinsIds;
 };
 
 struct LiaisonCycles {
-  int IdC1;
-  int IdC2;
-  int Poids;
+    int IdC1;
+    int IdC2;
+    int Poids;
 };
 
 struct g_cycles {
-  int Id;
-  int nb_cycles;
-  int nb_liaisons;
-  struct Cycle *generateur; // nœuds du graphe de cycle
-  struct LiaisonCycles *aretes;
-  struct g_mol *molecule;
+    int Id;
+    int nb_cycles;
+    int nb_liaisons;
+    struct Cycle *generateur; // nœuds du graphe de cycle
+    struct LiaisonCycles *aretes;
+    struct g_mol *molecule;
 };
 
 void mcKay(struct g_mol *g, sparsegraph *cg);
