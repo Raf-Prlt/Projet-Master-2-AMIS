@@ -42,5 +42,11 @@ void init_path(chemin *c, int n, int m);
 void free_path(chemin *c);
 void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms);
 void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg);
+void Horton(sparsegraph *sg, chemin **tab);
+void init_liaisons(sparsegraph *sg, struct Liaison A[]);
+int verifIntersectionVide(chemin *c1, chemin *c2);
+void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur);
+void TriCroissant(struct Cycle Ci[], int tailleTab);
+
 
 #endif
