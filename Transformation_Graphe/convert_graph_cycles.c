@@ -191,9 +191,8 @@ void Horton(sparsegraph *sg, chemin **c) {
 
   for (int i = 0; i < sg->nv; i++) {
     for (int j = 0; j <nbA; j++) {
-      printf("\nFLAGGYFLAGGYFLAGFLAG %d\n", cpt);
 
-      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2])) {
+      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde)) {
 
         cpt++;
 
@@ -205,24 +204,20 @@ void Horton(sparsegraph *sg, chemin **c) {
   cpt = 0;
 
   for (int i = 0; i < sg->nv; i++) {
-    for (int j = 0; j <sg->nde/2; j++) {
+    for (int j = 0; j <nbA; j++) {
 
-      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2])) {
+      if(i != A[j].IdA1 && i != A[j].IdA2) {
+        if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde)) {
+          
+          // printf("sommet %d\t atome 1 : %d\t atome 2: %d\n",i,A[j].IdA1,A[j].IdA2);
+          ajoutCycles(Ci, &c[i][A[j].IdA1], &c[i][A[j].IdA2], A[j], cpt, sg->nde, sg);
+          cpt++;
 
-        ajoutCycles(Ci, &c[i][A[j].IdA1], &c[i][A[j].IdA2], A[j], cpt);
-        cpt++;
-
+        }
       }
     }
   }
-
-  printf("\n\nFLAGGY FLAG AVANT TRI\n\n");
-
-    for(int i = 0; i<cpt; i++) {
-    printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
-  }
-
-
+  
 
   TriCroissant(Ci, cpt);
 
@@ -230,10 +225,24 @@ void Horton(sparsegraph *sg, chemin **c) {
 
 
   for(int i = 0; i<cpt; i++) {
-    printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
+     printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
   }
 
+  struct Cycle *Base;
+  Base = malloc(cpt * sizeof(struct Cycle));
+  if (Base == NULL) {
+    fprintf(stderr, "Erreur : échec de l'allocation mémoire.\n");
+    exit(EXIT_FAILURE);
+}
 
+  int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt);
+
+    printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
+
+
+  for(int i = 0; i<tailleB; i++) {
+     printf("Cycle numéro %d, taille : %d\n",i,Base[i].taille);
+  }
 
 }
 
@@ -241,7 +250,20 @@ void Horton(sparsegraph *sg, chemin **c) {
 
     int cptnbArete = 0;
     int cptIDA1 = 0;
-    int TabOccurence[32] = {0};
+    while(sg->d[cptIDA1] == 0) {
+      cptIDA1++;
+    }
+    int *TabOccurence = malloc(sg->nv * sizeof(int));
+
+    if (TabOccurence == NULL) {
+      // Gérer l'échec de l'allocation mémoire
+      exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < sg->nv; i++) {
+        TabOccurence[i] = 0;
+    }
+
 
     for(int i = 0; i < sg->nde; i++) {
 
@@ -262,41 +284,78 @@ void Horton(sparsegraph *sg, chemin **c) {
 
     }
 
+    free(TabOccurence);
+
     printf("\nNB LIAISONS = %d\n",cptnbArete);
-  }
 
-int verifIntersectionVide(chemin *c1, chemin *c2) {
-
-  for (int i = 1; i < c1->taille; i++) {
-    for (int j = 1; j < c2->taille; j++) {
-
-        if(c1->atomesIds[i] == c2->atomesIds[j]) {
-          return 0;
-        }
+    for(int i = 0; i < cptnbArete; i++) {
+      //printf("liaison %d, atome 1 :%d\tatome 2 : %d\n",i, A[i].IdA1,A[i].IdA2);
     }
   }
+
+int verifIntersectionVide(chemin *c1, chemin *c2, int m) {
+
+  for (int i = 0; i < m; i++) {
+    if ((c1->liaisons[i] == 1) && (c2->liaisons[i] == 1) ) {
+      return 0;
+    }
+  }
+
+  // printf("chemin :: atome 1 : %d\tatome 2 : %d\n",c1->atomesIds[0],c2->atomesIds[0]);
 
   return 1;
 }
 
-void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur) {
+void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur, int m, sparsegraph *sg) {
 
-  Ci[compteur].liaisons = malloc (100 * sizeof(int));
-
+  Ci[compteur].liaisons = malloc(m * sizeof(int));
   Ci[compteur].Id = compteur;
   Ci[compteur].taille = c1->taille + c2->taille + 1;
   Ci[compteur].degre = 0;
 
-  int cpt = 0;
-
-  for (int i = 0; i < c1->taille; i++) {
-    Ci[compteur].liaisons[cpt] = c1->liaisons[i];
-    cpt++;
+  for (int i = 0; i < m; i++) {
+    if (c1->liaisons[i] == 1 || c2->liaisons[i] == 1) {
+      Ci[compteur].liaisons[i] = 1;
+    }
   }
 
-  for (int i = 0; i < c2->taille; i++) {
-    Ci[compteur].liaisons[cpt] = c2->liaisons[i];
-    cpt++;
+  int indice = 0;
+
+  for (int i = 0; i < sg->nv; i++) {
+   for(int j = 0; j < sg->d[i]; j++) {
+
+    if (Ci[compteur].liaisons[indice] == 1) {
+      int IDA1 = i;
+      int IDA2 = sg->e[indice];
+
+      int indice2 = 0;
+
+      for (int iprime = 0; i < sg->nv; i++) {
+        for(int jprime = 0; j < sg->d[i]; j++) {
+
+          if ((iprime == IDA2) && (sg->e[indice2] == IDA1)) {
+
+            Ci[compteur].liaisons[indice2] = 1;
+          }
+          
+        }
+
+        indice2++;
+      }
+    }
+
+
+    if ((i == a.IdA1) && (sg->e[indice] == a.IdA2)) {
+      Ci[compteur].liaisons[indice] = 1;
+
+    }
+
+    if ((i == a.IdA2) && (sg->e[indice] == a.IdA1)) {
+      Ci[compteur].liaisons[indice] = 1;
+    }
+
+    indice++;
+   }
   }
 
     //Ci[compteur].liaisons[cpt] = a;
@@ -331,4 +390,52 @@ void TriCroissant(struct Cycle Ci[], int tailleTab) {
 
   }
 
+}
+
+int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi) {
+
+  int *incidence = malloc(m * sizeof(int));
+  int tailleBase = 0;
+
+    if (incidence == NULL) {
+      // Gérer l'échec de l'allocation mémoire
+      exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < m; i++) {
+        incidence[i] = 0;
+    }
+
+
+    for (int i = 0; i < tailleCi; i++) {
+
+      int oui = 0;
+
+
+      for (int j = 0; j < m; j++) {
+        if (Ci[i].liaisons[j] == 1 && incidence[j] == 0) {
+          oui = 1;
+        }
+      }
+
+      if (oui == 1) {
+
+        Base[tailleBase] = Ci[i];
+
+        for (int j = 0; j < m; j++) {
+          if (Base[tailleBase].liaisons[j] == 1 ) {
+            incidence[j] = 1;
+          }
+        }
+
+        tailleBase++;
+
+      }
+
+    }
+
+
+    free(incidence);
+
+    return tailleBase;
 }

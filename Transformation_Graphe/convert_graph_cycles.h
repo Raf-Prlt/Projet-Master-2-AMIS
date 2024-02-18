@@ -44,9 +44,11 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms);
 void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg);
 void Horton(sparsegraph *sg, chemin **tab);
 void init_liaisons(sparsegraph *sg, struct Liaison A[]);
-int verifIntersectionVide(chemin *c1, chemin *c2);
-void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur);
+int verifIntersectionVide(chemin *c1, chemin *c2, int m);
+void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur, int m, sparsegraph *sg);
 void TriCroissant(struct Cycle Ci[], int tailleTab);
+int ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base,  int tailleCi);
+
 
 
 #endif

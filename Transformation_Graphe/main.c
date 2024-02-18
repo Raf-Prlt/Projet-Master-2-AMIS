@@ -9,7 +9,7 @@ int main() {
     DIR *directory;
     struct dirent *entry;
     directory = opendir(
-        "../TraitementDonnee/output_molecules/"); // à modifier quand ce sera
+        "../TraitementDonnee/output_molecules_v3000/"); // à modifier quand ce sera
                                                 // bon (remplacer test par
                                                 // output_molecules)
     if (!directory) {
@@ -30,12 +30,14 @@ int main() {
             // Construit le chemin complet du fichier
             char filepath[512];
             snprintf(filepath, sizeof(filepath),
-                    "../TraitementDonnee/output_molecules/%s",
+                    "../TraitementDonnee/output_molecules_v3000/%s",
                     entry->d_name); // à modifier quand ce sera bon
             FILE *file = fopen(filepath, "r");
             if (!file) {
                 printf("Impossible d'ouvrir le fichier");
             }
+
+            if(strcmp(entry->d_name, "molecule_7.sdf") == 0) {
             //printf("Ouverture du fichier %18s\n", entry->d_name);
 
             // Conversion en graphe moléculaire
@@ -76,6 +78,8 @@ int main() {
 
                     smallest_paths(&cg, tab);
 
+                     Horton(&cg, tab);
+
                     for (int i = molecule->nb_atomes - 1; i >= 0; i--) {
                         for (int j = molecule->nb_atomes - 1; j >= 0; j--) {
                             free_path(&tab[i][j]);
@@ -84,12 +88,14 @@ int main() {
                     }
                     free(tab);
                 }
+            
                 SG_FREE(cg);
             }
 
             // Free et fermeture du fichier
             freeMolecule(molecule, molecule->nb_atomes);
             //printf("Fermeture du fichier %18s\n", entry->d_name);
+             }
             fclose(file);
         }
     }
