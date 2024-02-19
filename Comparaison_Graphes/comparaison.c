@@ -122,7 +122,7 @@ double comparaisonNbreVoisinsDeCycle(Graphe_Cycle g1, Graphe_Cycle g2){
         }
         degre1 = degre1/g1.nb_cycles;
         degre2 = degre2/g2.nb_cycles;
-        
+
         if (degre1 == degre2) {
             return 0.8 + comparaisonTailleDeCycles(g1, g2);
         }else if ((degre1 < (degre2+1)) && ((degre2-1) <= degre1)){
@@ -137,9 +137,8 @@ double comparaisonNbreVoisinsDeCycle(Graphe_Cycle g1, Graphe_Cycle g2){
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du poids moyen des liaisons entre les cycles
-bool comparaisonPoidsDesLiaisinsDeCycles(Graphe_Cycle g1, Graphe_Cycle g2){
+double degreDeSimilarite(Graphe_Cycle g1, Graphe_Cycle g2){
 
-    if(comparaisonNbreVoisinsDeCycle(g1, g2)){
         int poids1 = 0;
         int poids2 = 0;
         for (int i = 0; i < g1.nb_liaisons; i++) {
@@ -151,15 +150,93 @@ bool comparaisonPoidsDesLiaisinsDeCycles(Graphe_Cycle g1, Graphe_Cycle g2){
         poids2 = poids2/g2.nb_liaisons;
 
         if (poids1 == poids2) {
-            return true;
-        }       
-    }  
+            return 1 + comparaisonNbreVoisinsDeCycle(g1, g2);
+        }else if ((poids1 < (poids2+1)) && ((poids2-1) <= poids1)){
+            return 0.5 + comparaisonNbreVoisinsDeCycle(g1, g2);
+        }else if ((poids1 < (poids2+2)) && ((poids2-2) <= poids1)){
+            return 0.1 + comparaisonNbreVoisinsDeCycle(g1, g2);
+        }else{
+            return comparaisonNbreVoisinsDeCycle(g1, g2);
+        }    
 
-    return false;  
+    return 0;
 }
 
-// Fonction principale
+void calculSimilarite(Graphe_Cycle *liste){
+    double tab[5][5];
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = i; j < 5; j++)
+        {
+            tab[i][j] = degreDeSimilarite(liste[i], liste[j]);
+            tab[j][i] = tab[i][j];
+        }
+        
+    }
+
+    FILE* fichier = NULL;
+    fichier = fopen("fichier.txt", "r+");
+
+    if (fichier != NULL)
+    {
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 5; j++)
+            {
+                fprintf(fichier, "%d ", tab[i][j]);
+            }
+            fprintf(fichier, "\n");
+        }
+    }
+
+    fclose(fichier);
+    
+}
+
+
+
+// Fonction principale pour faire des tests
 int main() {
+    int tab[5][5];
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = i; j < 5; j++)
+        {
+            tab[i][j] = i;
+            tab[j][i] = i;
+        }
+        
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            printf("%d ", tab[i][j]);
+        }
+        printf("\n");
+        
+    }
+
+    FILE* fichier = NULL;
+    fichier = fopen("fichier.txt", "r+");
+
+    if (fichier != NULL)
+    {
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 5; j++)
+            {
+                //  fputc(tab[i][j]+" ", fichier);
+                fprintf(fichier, "%d ", tab[i][j]);
+            }
+            fprintf(fichier, "\n");
+        }
+        printf("OK \n");
+    }
+
+    fclose(fichier);
+    
     
     /* - Calculer la similarité entre tous les molécules deux par deux et stocker le résultat 
         dans un fichier sous forme de matrice 
