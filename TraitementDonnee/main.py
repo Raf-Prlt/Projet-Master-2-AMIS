@@ -11,7 +11,7 @@ sdf_url = "https://ftp.ebi.ac.uk/pub/databases/chebi/SDF/ChEBI_lite_3star.sdf.gz
 response = requests.get(sdf_url)
 
 # Dossier d'output
-output_dir = "output_molecules"
+output_dir = "output_molecules_v3000"
 os.makedirs(output_dir, exist_ok=True)
 
 # Vérifiez si le téléchargement a réussi (statut HTTP 200)
@@ -36,6 +36,7 @@ if response.status_code == 200:
             
             # Utilisez 'with' pour s'assurer que le writer est correctement fermé
             with Chem.SDWriter(output_file) as writer:
+                writer.SetForceV3000(True)
                 writer.write(mol)
 
             print(f"Molécule {idx + 1} enregistrée dans {output_filename}")

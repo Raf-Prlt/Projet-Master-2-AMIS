@@ -6,26 +6,26 @@
 #include <stdlib.h>
 
 struct Atome {
-  int Id;          // Numéro dans le fichier sdf
-  char symbole[2]; // trouver un moyen de transformer ça en num atomique
-  int degre;
-  int *voisinsIds;
-  // liaisons, autres infos...
+    int Id;					// Numéro dans le fichier sdf
+    char symbole[2]; // trouver un moyen de transformer ça en num atomique
+    int degre;
+    int *voisinsIds;
+    // liaisons, autres infos...
 };
 
 struct g_mol {
-  int Id; // ChEBI ID
-  char *name;
-  int nb_atomes;
-  int nb_liaisons;
-  struct Atome *Atomes;
-  struct Liaison *liaisons;
+    int Id; // ChEBI ID
+    char *name;
+    int nb_atomes;
+    int nb_liaisons;
+    struct Atome *Atomes;
+    struct Liaison *liaisons;
 };
 
 struct Liaison {
-  int IdA1;
-  int IdA2;
-  int Poids;
+    int IdA1;
+    int IdA2;
+    int Poids;
 };
 
 struct g_mol *gmol(FILE *file);
