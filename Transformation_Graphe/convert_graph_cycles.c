@@ -221,12 +221,11 @@ void Horton(sparsegraph *sg, chemin **c) {
 
   TriCroissant(Ci, cpt);
 
-  printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
-
+  /*printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
 
   for(int i = 0; i<cpt; i++) {
-     printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
-  }
+    printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
+  }*/
 
   struct Cycle *Base;
   Base = malloc(cpt * sizeof(struct Cycle));
@@ -237,12 +236,21 @@ void Horton(sparsegraph *sg, chemin **c) {
 
   int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt);
 
-    printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
-
+  /*printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
   for(int i = 0; i<tailleB; i++) {
-     printf("Cycle numéro %d, taille : %d\n",i,Base[i].taille);
+     printf("Cycle numéro %d, taille : %d\n",Base[i].Id,Base[i].taille);
+         for (int j = 0; j < sg->nde; j++) {
+        //printf("%d, ", Base[i].liaisons[j]);
+    }
+  }*/
+
+  printf("\nTaille de la base de cycle : %d\t",tailleB);
+  printf("\ttaille des cycles de la base : ");
+  for(int i = 0; i < tailleB; i++){
+    printf(" %d ,",Base[i].taille);
   }
+  printf("\n");
 
 }
 
@@ -313,6 +321,8 @@ void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int 
   Ci[compteur].taille = c1->taille + c2->taille + 1;
   Ci[compteur].degre = 0;
 
+
+
   for (int i = 0; i < m; i++) {
     if (c1->liaisons[i] == 1 || c2->liaisons[i] == 1) {
       Ci[compteur].liaisons[i] = 1;
@@ -322,27 +332,27 @@ void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int 
   int indice = 0;
 
   for (int i = 0; i < sg->nv; i++) {
-   for(int j = 0; j < sg->d[i]; j++) {
+    for(int j = 0; j < sg->d[i]; j++) {
 
-    if (Ci[compteur].liaisons[indice] == 1) {
-      int IDA1 = i;
-      int IDA2 = sg->e[indice];
+      if (Ci[compteur].liaisons[indice] == 1) {
 
-      int indice2 = 0;
+        int IDA1 = i;
+        int IDA2 = sg->e[indice];
 
-      for (int iprime = 0; i < sg->nv; i++) {
-        for(int jprime = 0; j < sg->d[i]; j++) {
+        int indice2 = 0;
 
-          if ((iprime == IDA2) && (sg->e[indice2] == IDA1)) {
+        for (int iprime = 0; iprime < sg->nv; iprime++) {
+          for(int jprime = 0; jprime < sg->d[iprime]; jprime++) {
 
-            Ci[compteur].liaisons[indice2] = 1;
+            if ((iprime == IDA2) && (sg->e[indice2] == IDA1)) {
+
+              Ci[compteur].liaisons[indice2] = 1;
+
+            }
+            indice2++;
           }
-          
         }
-
-        indice2++;
       }
-    }
 
 
     if ((i == a.IdA1) && (sg->e[indice] == a.IdA2)) {
@@ -358,10 +368,7 @@ void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int 
    }
   }
 
-    //Ci[compteur].liaisons[cpt] = a;
-
   //printf("\nLe cycle à bien été ajouté\n");
-  //printf("\nCompteur : %d\tverif : %d\n",compteur, 29*32);
 
 }
 

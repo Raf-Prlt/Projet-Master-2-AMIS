@@ -19,9 +19,9 @@ int main() {
     int nb_mol_vues = 0;
     // Lit chaque fichier dans le dossier
     while ((entry = readdir(directory)) != NULL) {
-        /*printf("--------------------------------- Molécule n°%d "
+        printf("--------------------------------- Molécule n°%d "
                 "---------------------------------\n",
-                nb_mol_vues);*/
+                nb_mol_vues);
         nb_mol_vues++;
 
         // Vérifie si le fichier est un fichier .sdf
@@ -37,7 +37,7 @@ int main() {
                 printf("Impossible d'ouvrir le fichier");
             }
 
-            if(strcmp(entry->d_name, "molecule_7.sdf") == 0) {
+            //if(strcmp(entry->d_name, "molecule_7.sdf") == 0) {
             //printf("Ouverture du fichier %18s\n", entry->d_name);
 
             // Conversion en graphe moléculaire
@@ -95,7 +95,7 @@ int main() {
             // Free et fermeture du fichier
             freeMolecule(molecule, molecule->nb_atomes);
             //printf("Fermeture du fichier %18s\n", entry->d_name);
-             }
+             //}
             fclose(file);
         }
     }
