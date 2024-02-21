@@ -162,7 +162,8 @@ double degreDeSimilarite(Graphe_Cycle g1, Graphe_Cycle g2){
     return 0;
 }
 
-void calculSimilarite(Graphe_Cycle *liste){
+// Calculer les similarités entre les graphes de cycles et stocker le résultat dans un fichier
+void calculSimilarites(Graphe_Cycle *liste){
     double tab[5][5];
 
     for (int i = 0; i < 5; i++)
@@ -181,6 +182,7 @@ void calculSimilarite(Graphe_Cycle *liste){
     if (fichier != NULL)
     {
         for (int i = 0; i < 5; i++){
+            fprintf(fichier, "%d ", liste[i].Id);
             for (int j = 0; j < 5; j++)
             {
                 fprintf(fichier, "%d ", tab[i][j]);
@@ -193,6 +195,12 @@ void calculSimilarite(Graphe_Cycle *liste){
     
 }
 
+//retrouver les 100 premiers graphes les plus similaire au graphe passé en paramètres
+void similarites(Graphe_Cycle *liste, Graphe_Cycle g1){
+
+
+
+}
 
 
 // Fonction principale pour faire des tests
