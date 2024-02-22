@@ -190,7 +190,7 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
   for (int i = 0; i < sg->nv; i++) {
     for (int j = 0; j <nbA; j++) {
 
-      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde, i)) {
+      if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde, i) && (c[i][A[j].IdA1].taille) > 0 && (c[i][A[j].IdA2].taille > 0)) {
 
         cpt++;
 
@@ -205,7 +205,7 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     for (int j = 0; j <nbA; j++) {
 
       if(i > A[j].IdA1 && i > A[j].IdA2) {
-        if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde, i)) {
+        if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde, i) && (c[i][A[j].IdA1].taille) > 0 && (c[i][A[j].IdA2].taille > 0)) {
           
           // printf("sommet %d\t atome 1 : %d\t atome 2: %d\n",i,A[j].IdA1,A[j].IdA2);
           ajoutCycles(Ci, &c[i][A[j].IdA1], &c[i][A[j].IdA2], A[j], cpt, sg->nde, sg);
@@ -240,7 +240,11 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     exit(EXIT_FAILURE);
   }
 
-  int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt);
+  printf("\n\nFLAGGY FLAG AVANT EXTRACTION BASE\n\n");
+
+  int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt, sg->nv, sg);
+
+  printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
   /*printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
@@ -455,7 +459,7 @@ void TriCroissantArete(struct Liaison A[], int tailleTab) {
 
 }
 
-int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi) {
+int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, int NbSom, sparsegraph *sg) {
 
   int *incidence = malloc(m * sizeof(int));
   int tailleBase = 0;
@@ -497,8 +501,114 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi) {
 
     }
 
+    int indicdeId = Ci[tailleCi-1].Id + 1;
 
-    free(incidence);
+    struct Cycle TabNvCycle[tailleBase*tailleBase];
+
+    for (int i = 0; i < tailleBase*tailleBase; i++) {
+      TabNvCycle[i].liaisons = malloc(m * sizeof(int));
+      for(int j = 0; j < sg->nde; j++) {
+        TabNvCycle[i].liaisons[j] = 0;
+      }
+      TabNvCycle[i].Id = -1;
+    }
+
+
+    int cptNvCycle = 0;
+
+    for (int i = 0; i < tailleBase; i++) {
+      for (int j = i; j < tailleBase; j++) {
+
+        int OcSom[NbSom];
+
+        for (int w = 0; w < sg->nv; w++) {
+          OcSom[w] = 0;
+        }
+        
+        if (i != j) {
+
+          int UnionDisjointe = 0;
+
+          for (int l = 0; l < m; l++) {
+            if ((Base[i].liaisons[l] == 1 && Base[j].liaisons[l] == 0) || (Base[i].liaisons[l] == 0 && Base[j].liaisons[l] == 1) ) {
+              UnionDisjointe++;
+              TabNvCycle[cptNvCycle].liaisons[l] = 1;
+              OcSom[sg->e[l]]++;
+            }
+          }
+
+          if (UnionDisjointe/2 <= Base[i].taille && UnionDisjointe/2 <= Base[j].taille) {
+            int check = 1;
+
+            /*printf("\n\n");
+
+            for (int w = 0; w < sg->nde; w++) {
+                printf("%d, ", Base[i].liaisons[w]);
+            }
+            
+            printf("\n\n");
+            for (int w = 0; w < sg->nde; w++) {
+                printf("%d, ", Base[j].liaisons[w]);
+            }
+
+            printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",UnionDisjointe);
+
+            printf("\n\n");
+            for (int w = 0; w < sg->nde; w++) {
+                printf("%d, ", TabNvCycle[cptNvCycle].liaisons[w]);
+            }
+
+            printf("\n\n");
+
+            for (int w = 0; w < sg->nv; w++) {
+                printf("%d, ", OcSom[w]);
+            }
+            printf("\n\n");*/
+
+            for(int s = 0; s < NbSom; s++) {
+              if (OcSom[s] != 2 && OcSom[s] != 0) {
+                check = 0;
+              }
+            }
+
+            if(check == 1) {
+
+              TabNvCycle[cptNvCycle].Id = indicdeId;
+              indicdeId++;
+              TabNvCycle[cptNvCycle].taille = UnionDisjointe/2;
+              //exit(66);
+            }
+          }
+
+        }
+
+        cptNvCycle++;
+
+      }
+    }
+
+    cptNvCycle = 0;
+
+    int tailleBaseTmp = tailleBase;
+
+    /*for (int i = 0; i < tailleBaseTmp*tailleBaseTmp; i++) {
+      if (TabNvCycle[i].Id != -1) {
+        Base[tailleBase] = TabNvCycle[i];
+        tailleBase++;
+        cptNvCycle++;
+
+      }
+    }*/
+
+
+
+    printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",cptNvCycle);
+    
+    //ajouter les nvx cycles trouvés à la base.
+
+
+
+    //free(incidence);
 
     return tailleBase;
 }

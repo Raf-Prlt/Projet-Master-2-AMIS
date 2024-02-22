@@ -47,7 +47,7 @@ void init_liaisons(sparsegraph *sg, struct Liaison A[]);
 int verifIntersectionVide(chemin *c1, chemin *c2, int m, int Som);
 void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur, int m, sparsegraph *sg);
 void TriCroissant(struct Cycle Ci[], int tailleTab);
-int ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base,  int tailleCi);
+int ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base,  int tailleCi, int NbSom, sparsegraph *sg);
 void TriCroissantArete(struct Liaison A[], int tailleTab);
 struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int tailleB, sparsegraph *sg);
 
