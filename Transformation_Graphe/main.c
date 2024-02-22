@@ -1,12 +1,50 @@
 #include "convert_graph_cycles.h"
 #include "gmol.h"
+#include "comparaison.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
 
 int main() {
-    DIR *directory;
+    DIR *directory2;
+    directory2 = opendir(
+        "../TraitementDonnee/output_molecules_v3000/"); // à modifier quand ce sera
+                                                // bon (remplacer test par
+                                                // output_molecules)
+    if (!directory2) {
+        printf("Impossible d'ouvrir le dossier");
+        exit(1);
+    }
+    // Lit chaque fichier dans le dossier
+
+    struct dirent *entry2;
+    int cpt = 0;
+
+    while ((entry2 = readdir(directory2)) != NULL) {
+      cpt++;
+    }
+
+    printf("\nNB FICHIER VU : %d\n",cpt);
+
+
+    struct g_cycles **TabGrapheCycle;
+
+    TabGrapheCycle = malloc (cpt * sizeof(struct g_cycles));
+
+
+/*
+ ____________________________________________________________________________________
+|                                                                                    |
+|             LECTURE  ET   CONVERSION   EN   GRAPHE   DE   CYCLES                   |
+|____________________________________________________________________________________|
+
+*/
+
+
+     DIR *directory;
     struct dirent *entry;
     directory = opendir(
         "../TraitementDonnee/output_molecules_v3000/"); // à modifier quand ce sera
@@ -17,11 +55,11 @@ int main() {
         exit(1);
     }
     int nb_mol_vues = 0;
-    // Lit chaque fichier dans le dossier
+
     while ((entry = readdir(directory)) != NULL) {
-        printf("--------------------------------- Molécule n°%d "
+       /* printf("--------------------------------- Molécule n°%d "
                 "---------------------------------\n",
-                nb_mol_vues);
+                nb_mol_vues);*/
         nb_mol_vues++;
 
         // Vérifie si le fichier est un fichier .sdf
@@ -37,7 +75,7 @@ int main() {
                 printf("Impossible d'ouvrir le fichier");
             }
 
-            //if(strcmp(entry->d_name, "molecule_7.sdf") == 0) {
+            // if(strcmp(entry->d_name, "molecule_9.sdf") == 0) {
             //printf("Ouverture du fichier %18s\n", entry->d_name);
 
             // Conversion en graphe moléculaire
@@ -55,7 +93,7 @@ int main() {
             if (molecule->nb_atomes < 600) {
                 SG_DECL(cg);
                 mcKay(molecule, &cg);
-                print_sg(&cg);
+                //print_sg(&cg);
 
                 int aie = 0;
                 for (size_t i = 0; i < cg.nde; i++) {
@@ -78,7 +116,14 @@ int main() {
 
                     smallest_paths(&cg, tab);
 
-                     Horton(&cg, tab);
+                    struct Cycle *Base;
+                    int tailleB;
+
+                    Base = Horton(&cg, tab, &tailleB);
+
+                    //struct g_cycles * GrapheCycle;
+
+                    TabGrapheCycle[nb_mol_vues] = ConvertBaseIntoGraph(molecule, Base, tailleB, &cg);
 
                     for (int i = molecule->nb_atomes - 1; i >= 0; i--) {
                         for (int j = molecule->nb_atomes - 1; j >= 0; j--) {
@@ -95,10 +140,52 @@ int main() {
             // Free et fermeture du fichier
             freeMolecule(molecule, molecule->nb_atomes);
             //printf("Fermeture du fichier %18s\n", entry->d_name);
-             //}
+            // }
             fclose(file);
         }
+
     }
+
+
+
+/*
+ ____________________________________________________________________________________
+|                                                                                    |
+|                COMPARAISON              ENTRE               MOLÉCULES              |
+|____________________________________________________________________________________|
+
+*/
+
+printf("\n\nFLAGGY FLAGGY FLAG FLAG COMPARAISON %d\n\n", nb_mol_vues);
+
+    int id1 = 4;
+    int id2 = 4;
+
+    for (int i = 3; i < nb_mol_vues; i++) {
+      // printf("\n\nVICTOIRE MOUSAILLON\n\n");
+
+      if(TabGrapheCycle[i]->Id == 1296) {
+        id1 = i;
+      }
+
+      if(TabGrapheCycle[i]->Id == 1712) {
+        id2 = i;
+      }
+    }
+
+    bool test = false;
+
+    test = comparaisonNbreDeCycles(*TabGrapheCycle[id1], *TabGrapheCycle[id2]);
+
+
+    if(test == true){
+      printf("\n\nLES MOLÉCULES %d ET %d SONT IDENTIQUES !! VICTOIRE !!\n\n",id1,id2);
+    } else {
+      printf("\n\nBOUHOUHOUHÇAMARCHEPAS :/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/\n\n");
+
+    }
+
+
     closedir(directory);
     return 0;
 }

@@ -21,7 +21,7 @@ void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg) {
         }
         j = j + a.degre;
     }
-    print_sg(sg);
+    //print_sg(sg);
 }
 
 void print_sg(sparsegraph *sg) {
@@ -173,12 +173,10 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     free(next);
 }
 
-void Horton(sparsegraph *sg, chemin **c) {
+ struct Cycle * Horton(sparsegraph *sg, chemin **c, int *tB) {
 
-  printf("\nHello there\nGENERAL KENOBI\n");
-
-  printf("\nNb atome : %d\n",sg->nv);
-  printf("\nNb liaisons : %ld\n",sg->nde);
+  //printf("\nNb atome : %d\n",sg->nv);
+  //printf("\nNb liaisons : %ld\n",sg->nde);
 
   int nbA = sg->nde/2;
 
@@ -218,29 +216,29 @@ void Horton(sparsegraph *sg, chemin **c) {
     }
   }
 
-    for(int i = 0; i<cpt; i++) {
+   /* for(int i = 0; i<cpt; i++) {
      printf("Cycle numéro %d, taille : %d\n",Ci[i].Id,Ci[i].taille);
          for (int j = 0; j < sg->nde; j++) {
         printf("%d, ", Ci[i].liaisons[j]);
     }
     printf("\n\n");
-  }
+  }*/
   
 
   TriCroissant(Ci, cpt);
 
-  printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
+ /* printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
 
   for(int i = 0; i<cpt; i++) {
     printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
-  }
+  }*/
 
   struct Cycle *Base;
   Base = malloc(cpt * sizeof(struct Cycle));
   if (Base == NULL) {
     fprintf(stderr, "Erreur : échec de l'allocation mémoire.\n");
     exit(EXIT_FAILURE);
-}
+  }
 
   int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt);
 
@@ -259,6 +257,10 @@ void Horton(sparsegraph *sg, chemin **c) {
     printf(" %d ,",Base[i].taille);
   }
   printf("\n");
+
+  *tB = tailleB;
+
+  return Base;
 
 }
 
@@ -302,7 +304,7 @@ void Horton(sparsegraph *sg, chemin **c) {
 
     free(TabOccurence);
 
-    printf("\nNB LIAISONS = %d\n",cptnbArete);
+    //printf("\nNB LIAISONS = %d\n",cptnbArete);
 
     for(int i = 0; i < cptnbArete; i++) {
       //printf("liaison %d, atome 1 :%d\tatome 2 : %d\n",i, A[i].IdA1,A[i].IdA2);
@@ -339,6 +341,9 @@ int verifIntersectionVide(chemin *c1, chemin *c2, int m, int Som) {
 void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur, int m, sparsegraph *sg) {
 
   Ci[compteur].liaisons = malloc(m * sizeof(int));
+  for( int i = 0; i < m; i++) {
+    Ci[compteur].liaisons[i] = 0;
+  }
   Ci[compteur].Id = compteur;
   Ci[compteur].taille = c1->taille + c2->taille + 1;
   Ci[compteur].degre = 0;
@@ -496,4 +501,59 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi) {
     free(incidence);
 
     return tailleBase;
+}
+
+struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int tailleB, sparsegraph *sg) {
+
+  //printf("\nHello there\nGENERAL KENOBI\n");
+
+  struct g_cycles *GrapheCycle;
+
+  GrapheCycle = malloc(sizeof(struct g_cycles));
+
+  GrapheCycle->generateur = Base;
+  GrapheCycle->Id = g->Id;
+  GrapheCycle->nb_cycles = tailleB;
+  GrapheCycle->molecule = g;
+
+  int Nbliaisons = 0;
+
+  struct LiaisonCycles *tabLiaison;
+
+  tabLiaison = malloc(GrapheCycle->nb_cycles*GrapheCycle->nb_cycles*sizeof(struct LiaisonCycles));
+
+  for (int i = 0; i < GrapheCycle->nb_cycles; i++) {
+    for (int j = 0; j < GrapheCycle->nb_cycles; j++) {
+      
+      if(i != j) {
+        int poidsLiaison = 0;
+        for (int k = 0; k < sg->nde; k++) {
+          if(GrapheCycle->generateur[i].liaisons[k] == GrapheCycle->generateur[j].liaisons[k]) {
+            poidsLiaison++;
+          }
+        }
+
+        if(poidsLiaison > 0) {
+
+          tabLiaison[Nbliaisons].IdC1 = i;
+          tabLiaison[Nbliaisons].IdC2 = j;
+          tabLiaison[Nbliaisons].Poids = poidsLiaison/2;
+          Nbliaisons++;
+
+        }
+
+      }
+
+    }    
+  }
+
+  GrapheCycle->nb_liaisons = Nbliaisons;
+  GrapheCycle->aretes = malloc(GrapheCycle->nb_liaisons * sizeof(struct LiaisonCycles));
+
+  for (int i = 0; i < GrapheCycle->nb_liaisons; i++) {
+    GrapheCycle->aretes[i] = tabLiaison[i];
+  }
+
+  return GrapheCycle;
+
 }

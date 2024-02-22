@@ -42,14 +42,13 @@ void init_path(chemin *c, int n, int m);
 void free_path(chemin *c);
 void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms);
 void gmol_to_sparsegraph(struct g_mol *g, sparsegraph *sg);
-void Horton(sparsegraph *sg, chemin **tab);
+struct Cycle * Horton(sparsegraph *sg, chemin **tab, int *tB);
 void init_liaisons(sparsegraph *sg, struct Liaison A[]);
 int verifIntersectionVide(chemin *c1, chemin *c2, int m, int Som);
 void ajoutCycles(struct Cycle *Ci, chemin *c1, chemin *c2,struct Liaison a, int compteur, int m, sparsegraph *sg);
 void TriCroissant(struct Cycle Ci[], int tailleTab);
 int ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base,  int tailleCi);
 void TriCroissantArete(struct Liaison A[], int tailleTab);
-
-
+struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int tailleB, sparsegraph *sg);
 
 #endif
