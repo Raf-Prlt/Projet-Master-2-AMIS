@@ -2,6 +2,7 @@ Transformation_Graphe/*.o
 Transformation_Graphe/main
 .vscode/settings.json
 TraitementDonnee/output_molecules/*.sdf
+TraitementDonnee/output_molecules_v3000/*.sdf
 .vscode/c_cpp_properties.json
 .vscode/tasks.json
 Transformation_Graphe/g_mol/*.dat
