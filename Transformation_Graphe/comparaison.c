@@ -181,7 +181,7 @@ void graphesSimilaires(struct g_cycles g1){
         {
             printf("%s", chaine); // On affiche la chaîne qu'on vient de lire
         }
- 
+        // A suivre ...
         fclose(fichier);
     }
 }
