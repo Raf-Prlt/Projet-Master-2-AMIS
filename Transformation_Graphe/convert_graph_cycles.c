@@ -255,6 +255,8 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     }
   }*/
 
+  TriCroissant(Base, tailleB);
+
   printf("\nTaille de la base de cycle : %d\t",tailleB);
   printf("\ttaille des cycles de la base : ");
   for(int i = 0; i < tailleB; i++){
