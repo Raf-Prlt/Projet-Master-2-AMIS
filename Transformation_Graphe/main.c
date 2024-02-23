@@ -75,7 +75,7 @@ int main() {
                 printf("Impossible d'ouvrir le fichier");
             }
 
-            // if(strcmp(entry->d_name, "molecule_9.sdf") == 0) {
+            // if(strcmp(entry->d_name, "molecule_11181.sdf") == 0) {
             //printf("Ouverture du fichier %18s\n", entry->d_name);
 
             // Conversion en graphe moléculaire
@@ -121,6 +121,7 @@ int main() {
 
                     Base = Horton(&cg, tab, &tailleB);
 
+                    //printf("\n\nFLAGGYFLAGGYFLAGFLAG FIN HORTON %d\n\n", tailleB);
                     //struct g_cycles * GrapheCycle;
 
                     TabGrapheCycle[nb_mol_vues] = ConvertBaseIntoGraph(molecule, Base, tailleB, &cg);
@@ -179,7 +180,7 @@ printf("\n\nFLAGGY FLAGGY FLAG FLAG COMPARAISON %d\n\n", nb_mol_vues);
 
 
     if(test == true){
-      printf("\n\nLES MOLÉCULES %d ET %d SONT IDENTIQUES !! VICTOIRE !!\n\n",id1,id2);
+      printf("\n\nLES MOLÉCULES %d ET %d SONT IDENTIQUES !! VICTOIRE !!\n\n",TabGrapheCycle[id1]->Id,TabGrapheCycle[id2]->Id);
     } else {
       printf("\n\nBOUHOUHOUHÇAMARCHEPAS :/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/\n\n");
 

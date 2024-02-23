@@ -234,17 +234,17 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
   }*/
 
   struct Cycle *Base;
-  Base = malloc(cpt * sizeof(struct Cycle));
+  Base = malloc(cpt*((cpt+1)/2 + 1) * sizeof(struct Cycle));
   if (Base == NULL) {
     fprintf(stderr, "Erreur : échec de l'allocation mémoire.\n");
     exit(EXIT_FAILURE);
   }
 
-  printf("\n\nFLAGGY FLAG AVANT EXTRACTION BASE\n\n");
+  //printf("\n\nFLAGGY FLAG AVANT EXTRACTION BASE\n\n");
 
   int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt, sg->nv, sg);
 
-  printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
+  //printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
   /*printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
@@ -503,12 +503,16 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
 
     int indicdeId = Ci[tailleCi-1].Id + 1;
 
-    struct Cycle TabNvCycle[tailleBase*tailleBase];
+    int tailleMax = (tailleBase*(tailleBase + 1))/2;
 
-    for (int i = 0; i < tailleBase*tailleBase; i++) {
+    struct Cycle *TabNvCycle;
+      TabNvCycle = malloc(tailleMax * sizeof(struct Cycle));
+
+    for (int i = 0; i < tailleMax; i++) {
       TabNvCycle[i].liaisons = malloc(m * sizeof(int));
       for(int j = 0; j < sg->nde; j++) {
         TabNvCycle[i].liaisons[j] = 0;
+        //printf("\nFLAGGYFLAGGYFLAGFLAG numéro cycle  : %d\t numéro arête : %d valeur arete : %d\n",i,j,TabNvCycle[i].liaisons[j]);
       }
       TabNvCycle[i].Id = -1;
     }
@@ -589,26 +593,34 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
 
     cptNvCycle = 0;
 
-    int tailleBaseTmp = tailleBase;
+    /*for (int i = 0; i < tailleMax; i++) {
+      if (TabNvCycle[i].Id != -1) {
+        printf("\n");
+        for(int k = 0; k < m; k++) {
+          printf(" %d ,",TabNvCycle[i].liaisons[k]);
+        }
+        printf("\n");
 
-    /*for (int i = 0; i < tailleBaseTmp*tailleBaseTmp; i++) {
+      }
+    }*/
+
+    for (int i = 0; i < tailleMax; i++) {
       if (TabNvCycle[i].Id != -1) {
         Base[tailleBase] = TabNvCycle[i];
         tailleBase++;
         cptNvCycle++;
 
       }
-    }*/
+    }
 
+    free(TabNvCycle);
 
-
-    printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",cptNvCycle);
+    //printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",cptNvCycle);
+    //printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",tailleBase);
     
     //ajouter les nvx cycles trouvés à la base.
 
-
-
-    //free(incidence);
+    free(incidence);
 
     return tailleBase;
 }
@@ -638,7 +650,8 @@ struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int 
       if(i != j) {
         int poidsLiaison = 0;
         for (int k = 0; k < sg->nde; k++) {
-          if(GrapheCycle->generateur[i].liaisons[k] == GrapheCycle->generateur[j].liaisons[k]) {
+          
+          if(GrapheCycle->generateur[i].liaisons[k] == 1 && GrapheCycle->generateur[j].liaisons[k] == 1) {
             poidsLiaison++;
           }
         }
