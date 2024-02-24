@@ -235,4 +235,5 @@ int mainComp() {
     calculSimilarite(liste, 3);
     graphesSimilaires(g1);
     */
+   return 0;
 }
