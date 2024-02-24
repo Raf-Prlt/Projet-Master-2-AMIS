@@ -23,36 +23,37 @@ double comparaisonNbreDeCycles(struct g_cycles g1, struct g_cycles g2){
 
 // Fonction pour comparer deux graphes de cycles sous le critère de la taille des cycles
 double comparaisonTailleDeCycles(struct g_cycles g1, struct g_cycles g2){
-        double degreDeSimilarite;
-        int cyclesIdentiques = 0;
-        int max;
-        int min;
-        if (g1.nb_cycles < g2.nb_cycles){
-            min = g1.nb_cycles;
-            max = g2.nb_cycles;
-        }else{
-            max = g1.nb_cycles;
-            min = g2.nb_cycles;
-        }
-        int i = 0;
-        int j = 0;
-        while (i < g1.nb_cycles)
+    double degreDeSimilarite;
+    int cyclesIdentiques = 0;
+    int max;
+    int min;
+    if (g1.nb_cycles < g2.nb_cycles){
+        min = g1.nb_cycles;
+        max = g2.nb_cycles;
+    }else{
+        max = g1.nb_cycles;
+        min = g2.nb_cycles;
+    }
+    int i = 0;
+    int j = 0;
+    while (i < g1.nb_cycles && j < g2.nb_cycles)
+    {
+        //printf("taille 1 = %d , taille 2 = %d , i = %d et j = %d\n",g1.nb_cycles,g2.nb_cycles,i,j);
+
+        if (g1.generateur[i].taille == g2.generateur[i].taille){
+            cyclesIdentiques++;
+            i++;
+            j++;
+        }else if (g1.generateur[i].taille < g2.generateur[i].taille)
         {
-            while (j < g2.nb_cycles)
-            {
-                if (g1.generateur[i].taille == g2.generateur[i].taille){
-                    cyclesIdentiques++;
-                }else if (g1.generateur[i].taille < g2.generateur[i].taille)
-                {
-                    i++;
-                }else if (g1.generateur[i].taille > g2.generateur[i].taille)
-                {
-                    j++;
-                }  
-            }
-        }
-        degreDeSimilarite = cyclesIdentiques/max;
-        return degreDeSimilarite;  
+            i++;
+        }else if (g1.generateur[i].taille > g2.generateur[i].taille)
+        {
+            j++;
+        } 
+    }
+    degreDeSimilarite = cyclesIdentiques/max;
+    return degreDeSimilarite; 
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du nombre de voisins
@@ -86,27 +87,27 @@ double comparaisonNbreVoisinsDeCycle(struct g_cycles g1,struct g_cycles g2){
 
 // Fonction pour comparer deux graphes de cycles sous le critère du poids moyen des liaisons entre les cycles
 double comparaisonPoidsDesArretes(struct g_cycles g1, struct g_cycles g2){
-        double degreDeSimilarite;
-        int poids1 = 0;
-        int poids2 = 0;
-        int max;
-        int min;
+    double degreDeSimilarite;
+    int poids1 = 0;
+    int poids2 = 0;
+    int max;
+    int min;
 
-        for (int i = 0; i < g1.nb_liaisons; i++) {
-            poids1 += g1.aretes[i].Poids;
-            poids2 += g2.aretes[i].Poids;
-        }
+    for (int i = 0; i < g1.nb_liaisons; i++) {
+        poids1 += g1.aretes[i].Poids;
+        poids2 += g2.aretes[i].Poids;
+    }
 
-        poids1 = poids1/g1.nb_cycles;
-        poids2 = poids2/g2.nb_liaisons; 
+    poids1 = poids1/g1.nb_cycles;
+    poids2 = poids2/g2.nb_liaisons; 
 
-        if (poids1 < poids2){
-            min = poids1;
-            max = poids2;
-        }else{
-            max = poids1;
-            min = poids2;
-        }
+    if (poids1 < poids2){
+        min = poids1;
+        max = poids2;
+    }else{
+        max = poids1;
+        min = poids2;
+    }
     degreDeSimilarite = min/max;
     return degreDeSimilarite;
 }
@@ -128,7 +129,6 @@ double similarite(struct g_cycles g1, struct g_cycles g2){
 // Calculer les similarités entre les graphes de cycles et stocker le résultat dans un fichier
 void calculSimilarite(struct g_cycles *liste, int size){
     double **tab = malloc(size * sizeof(double*));
-    
     for (int i = 0; i < size; i++)
     {
         tab[i] = malloc(size * sizeof(double));
@@ -164,7 +164,7 @@ void calculSimilarite(struct g_cycles *liste, int size){
         }
         // Fermer le fichier
         fclose(fichier); 
-    }    
+    } 
 }
 
 //retrouver les 100 premiers graphes les plus similaire au graphe passé en paramètres
@@ -179,13 +179,65 @@ void graphesSimilaires(struct g_cycles g1){
     {
         while (fgets(chaine, TAILLE_MAX, fichier) != NULL) // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
         {
-            printf("%s", chaine); // On affiche la chaîne qu'on vient de lire
+        printf("%s", chaine); // On affiche la chaîne qu'on vient de lire
         }
         // A suivre ...
         fclose(fichier);
     }
 }
 
+int rechercheIndiceAvecId(struct g_cycles **TabGrapheCycle,int cpt,int id){
+    for(int i = 3;i<cpt;i++){
+        if(TabGrapheCycle[i]->Id == id){
+            return i;
+        }
+    }
+    printf("PROBLEME RECHERCHE INDICE !!!\n");
+    return 0;
+    }
+
+void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la taille du tableau
+    int ** ClasseEquivalence;
+    ClasseEquivalence = malloc(cpt*sizeof(int*));
+    for(int i = 0 ; i<cpt;i++){
+        ClasseEquivalence[i] = malloc(cpt*sizeof(int));
+    }
+    int * indiceClasse;
+    indiceClasse = malloc(cpt*sizeof(int));
+    int nbClasseEqui = 0;
+    for(int i = 3;i<cpt;i++){
+        printf("Coucou %d\n",i);
+        int ajout = 0;
+        for(int j=0;j<nbClasseEqui;j++){
+            if(comparaisonTailleDeCycles(*TabGrapheCycle[i],*TabGrapheCycle[rechercheIndiceAvecId(TabGrapheCycle,cpt,ClasseEquivalence[j][0])])==1){
+                ClasseEquivalence[j][indiceClasse[j]] = TabGrapheCycle[i]->Id;
+                indiceClasse[j]++;
+                ajout = 1;
+            }
+        }
+        if(ajout ==0){
+            ClasseEquivalence[nbClasseEqui][0] = TabGrapheCycle[i]->Id;
+            indiceClasse[nbClasseEqui] = 1;
+            nbClasseEqui++;
+        }
+    }
+
+    for(int i = 0; i<nbClasseEqui;i++){
+        printf("Classe %d : ",i);
+        for(int j=0; j<indiceClasse[i];j++){
+            printf("%d ",ClasseEquivalence[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Libération de la mémoire
+    for (int i = 0; i < cpt; i++) {
+        free(ClasseEquivalence[i]);
+    }
+    free(ClasseEquivalence);
+    free(indiceClasse);
+    printf("OK\n");
+}
 
 // Fonction principale pour faire des tests
 int mainComp() {

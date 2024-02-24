@@ -56,7 +56,7 @@ int main() {
     }
     int nb_mol_vues = 0;
 
-    while ((entry = readdir(directory)) != NULL) {
+    while ((entry = readdir(directory)) != NULL && nb_mol_vues<100) {
        /* printf("--------------------------------- Molécule n°%d "
                 "---------------------------------\n",
                 nb_mol_vues);*/
@@ -186,7 +186,7 @@ printf("\n\nFLAGGY FLAGGY FLAG FLAG COMPARAISON %d\n\n", nb_mol_vues);
 
     }
 
-
+    classeEquivalences(TabGrapheCycle,nb_mol_vues);
     closedir(directory);
     return 0;
 }
