@@ -16,7 +16,7 @@ double comparaisonNbreDeCycles(struct g_cycles g1, struct g_cycles g2){
         max = g1.nb_cycles;
         min = g2.nb_cycles;
     }
-    degreDeSimilarite = min/max;
+    degreDeSimilarite = (double) min / max;
 
     return degreDeSimilarite;
 }
@@ -36,32 +36,35 @@ double comparaisonTailleDeCycles(struct g_cycles g1, struct g_cycles g2){
         }
         int i = 0;
         int j = 0;
-        while (i < g1.nb_cycles)
+        while (j < g2.nb_cycles)
         {
-            while (j < g2.nb_cycles)
+            if (g1.generateur[i].taille == g2.generateur[j].taille){
+                cyclesIdentiques++;
+                j++;
+            }else if (g1.generateur[i].taille < g2.generateur[j].taille)
             {
-                if (g1.generateur[i].taille == g2.generateur[i].taille){
-                    cyclesIdentiques++;
-                }else if (g1.generateur[i].taille < g2.generateur[i].taille)
+                if (i == g1.nb_cycles)
                 {
+                    j = g2.nb_cycles;
+                }else{
                     i++;
-                }else if (g1.generateur[i].taille > g2.generateur[i].taille)
-                {
-                    j++;
-                }  
-            }
+                }
+            }else if (g1.generateur[i].taille > g2.generateur[j].taille)
+            {
+                j++;
+            }  
         }
-        degreDeSimilarite = cyclesIdentiques/max;
+        degreDeSimilarite = (double) cyclesIdentiques / max;
         return degreDeSimilarite;  
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du nombre de voisins
 double comparaisonNbreVoisinsDeCycle(struct g_cycles g1,struct g_cycles g2){
     double degreDeSimilarite;
-    int max;
-    int min;
-    int degre1 = 0;
-    int degre2 = 0;
+    double max;
+    double min;
+    double degre1 = 0;
+    double degre2 = 0;
 
     for (int i = 0; i < g1.nb_cycles; i++) {
         degre1 += g1.generateur[i].degre;
@@ -70,8 +73,8 @@ double comparaisonNbreVoisinsDeCycle(struct g_cycles g1,struct g_cycles g2){
         degre2 += g2.generateur[i].degre;
     }
 
-    degre1 = degre1/g1.nb_cycles;
-    degre2 = degre2/g2.nb_cycles;
+    degre1 = (double) degre1 / g1.nb_cycles;
+    degre2 = (double) degre2 / g2.nb_cycles;
 
     if (degre1 < degre2){
         min = degre1;
@@ -80,25 +83,28 @@ double comparaisonNbreVoisinsDeCycle(struct g_cycles g1,struct g_cycles g2){
         max = degre1;
         min = degre2;
     }
-    degreDeSimilarite = min/max;
+    degreDeSimilarite = (double) min / max;
     return degreDeSimilarite;
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère du poids moyen des liaisons entre les cycles
 double comparaisonPoidsDesArretes(struct g_cycles g1, struct g_cycles g2){
         double degreDeSimilarite;
-        int poids1 = 0;
-        int poids2 = 0;
-        int max;
-        int min;
+        double poids1 = 0;
+        double poids2 = 0;
+        double max;
+        double min;
 
         for (int i = 0; i < g1.nb_liaisons; i++) {
             poids1 += g1.aretes[i].Poids;
+        }
+
+         for (int i = 0; i < g2.nb_liaisons; i++) {
             poids2 += g2.aretes[i].Poids;
         }
 
-        poids1 = poids1/g1.nb_cycles;
-        poids2 = poids2/g2.nb_liaisons; 
+        poids1 = (double) poids1 / g1.nb_liaisons;
+        poids2 = (double) poids2 / g2.nb_liaisons; 
 
         if (poids1 < poids2){
             min = poids1;
@@ -107,7 +113,7 @@ double comparaisonPoidsDesArretes(struct g_cycles g1, struct g_cycles g2){
             max = poids1;
             min = poids2;
         }
-    degreDeSimilarite = min/max;
+    degreDeSimilarite = (double) min / max;
     return degreDeSimilarite;
 }
 
@@ -120,7 +126,7 @@ double similarite(struct g_cycles g1, struct g_cycles g2){
     degre += comparaisonNbreVoisinsDeCycle(g1, g2);
     degre += comparaisonPoidsDesArretes(g1, g2);
 
-    degreDeSimilarite = degre/4;
+    degreDeSimilarite = (double) degre / 4;
     return degreDeSimilarite;
 
 }
@@ -143,7 +149,13 @@ void calculSimilarite(struct g_cycles *liste, int size){
             tab[j][i] = tab[i][j];
         } 
     }
-
+    //Création du sous dossier
+   #ifdef _WIN32
+    system("mkdir similarite 2> nul"); // Pour Windows
+    #else
+        system("mkdir -p g_mol 2> /dev/null"); // Pour Linux/Unix
+    #endif
+    
     // Enregistrement
     for (int i = 0; i < size; i++)
     {
@@ -159,12 +171,13 @@ void calculSimilarite(struct g_cycles *liste, int size){
         for (int j = 0; j < size; j++)
         {
             // Écriture dans le fichier
-            fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
+            //fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
+            fprintf(fichier, "%lf  %d", tab[i][j], liste[j].Id);
             fprintf(fichier, "\n");
         }
         // Fermer le fichier
         fclose(fichier); 
-    }    
+    }  
 }
 
 //retrouver les 100 premiers graphes les plus similaire au graphe passé en paramètres
@@ -173,13 +186,14 @@ void graphesSimilaires(struct g_cycles g1){
     sprintf(filename, "similarite/similarite_%d.txt", g1.Id);
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(filename, "r");
-    int TAILLE_MAX = 1000;
+    int TAILLE_MAX = 100;
     char chaine[TAILLE_MAX];
     if (fichier != NULL)
     {
         while (fgets(chaine, TAILLE_MAX, fichier) != NULL) // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
         {
             printf("%s", chaine); // On affiche la chaîne qu'on vient de lire
+            
         }
         // A suivre ...
         fclose(fichier);
@@ -189,24 +203,36 @@ void graphesSimilaires(struct g_cycles g1){
 
 // Fonction principale pour faire des tests
 int mainComp() {
+    /*
+    struct g_cycles *liste = malloc(3*sizeof(struct g_cycles));
+
     struct g_cycles g1;
     struct g_cycles g2;
     struct g_cycles g3;
-
-    //initialisation
-    //Id
-    g1.Id = 1;
-    g2.Id = 2;
-    g3.Id = 3;
-
-    //Nombre de cycles;
-    g1.nb_cycles = 3;
-    g2.nb_cycles = 3;
-    g3.nb_cycles = 4;
-
+    
+    
     //Test nombre de cycle
     printf("Similarité nombre de cycle: %lf \n", comparaisonNbreDeCycles(g1, g2));
     printf("Similarité nombre de cycle: %lf \n", comparaisonNbreDeCycles(g1, g3));
 
-    return 0;
+    //Test taille de cycle
+    printf("Similarité taille de cycle: %lf \n", comparaisonTailleDeCycles(g1, g2));
+    printf("Similarité taille de cycle: %lf \n", comparaisonTailleDeCycles(g1, g3));
+
+    //Test nombre de voisins
+    printf("Similarité nombre de voisins: %lf \n", comparaisonNbreVoisinsDeCycle(g1, g2));
+    printf("Similarité nombre de voisins: %lf \n", comparaisonNbreVoisinsDeCycle(g1, g3));
+
+    //Test poids des arêtes
+    printf("Similarité poids des arêtes: %lf \n", comparaisonPoidsDesArretes(g1, g2));
+    printf("Similarité poids des arêtes: %lf \n", comparaisonPoidsDesArretes(g1, g3));
+
+    //Test similarité
+    printf("Degré de similarité : %lf \n", similarite(g1, g2));
+    printf("Degré de similarité : %lf \n", similarite(g1, g3));
+   
+    //Test calcul des similarités
+    calculSimilarite(liste, 3);
+    graphesSimilaires(g1);
+    */
 }
