@@ -22,37 +22,30 @@ double comparaisonNbreDeCycles(struct g_cycles g1, struct g_cycles g2){
 }
 
 // Fonction pour comparer deux graphes de cycles sous le critère de la taille des cycles
-double comparaisonTailleDeCycles(struct g_cycles g1, struct g_cycles g2){
+ double comparaisonTailleDeCycles(struct g_cycles g1, struct g_cycles g2){
         double degreDeSimilarite;
-        int cyclesIdentiques = 0;
-        int max;
-        int min;
+        double cyclesIdentiques = 0.0;
+        double max;
         if (g1.nb_cycles < g2.nb_cycles){
-            min = g1.nb_cycles;
             max = g2.nb_cycles;
         }else{
             max = g1.nb_cycles;
-            min = g2.nb_cycles;
         }
         int i = 0;
         int j = 0;
-        while (j < g2.nb_cycles)
-        {
-            if (g1.generateur[i].taille == g2.generateur[j].taille){
-                cyclesIdentiques++;
-                j++;
-            }else if (g1.generateur[i].taille < g2.generateur[j].taille)
-            {
-                if (i == g1.nb_cycles)
-                {
-                    j = g2.nb_cycles;
-                }else{
-                    i++;
-                }
-            }else if (g1.generateur[i].taille > g2.generateur[j].taille)
-            {
-                j++;
-            }  
+        
+        while (j < g2.nb_cycles && i < g1.nb_cycles) {
+
+          if (g1.generateur[i].taille == g2.generateur[j].taille){
+            cyclesIdentiques++;
+            j++;
+            i++;
+          } else if (g1.generateur[i].taille < g2.generateur[j].taille) {
+            i++;
+          } else if (g1.generateur[i].taille > g2.generateur[j].taille) {
+            j++;
+          }
+
         }
         degreDeSimilarite = (double) cyclesIdentiques / max;
         return degreDeSimilarite;  
@@ -83,7 +76,12 @@ double comparaisonNbreVoisinsDeCycle(struct g_cycles g1,struct g_cycles g2){
         max = degre1;
         min = degre2;
     }
-    degreDeSimilarite = (double) min / max;
+
+    if (max == 0) {
+        degreDeSimilarite = 1;
+    } else {
+        degreDeSimilarite = (double) min / max;
+    }
     return degreDeSimilarite;
 }
 
@@ -94,6 +92,14 @@ double comparaisonPoidsDesArretes(struct g_cycles g1, struct g_cycles g2){
         double poids2 = 0;
         double max;
         double min;
+
+        if (g1.nb_liaisons == 0 && g2.nb_liaisons == 0) {
+            return 1;
+        }
+
+        if (g1.nb_liaisons == 0 || g2.nb_liaisons == 0) {
+            return 0;
+        }  
 
         for (int i = 0; i < g1.nb_liaisons; i++) {
             poids1 += g1.aretes[i].Poids;
@@ -113,14 +119,18 @@ double comparaisonPoidsDesArretes(struct g_cycles g1, struct g_cycles g2){
             max = poids1;
             min = poids2;
         }
-    degreDeSimilarite = (double) min / max;
+            
+    if (max == 0) {
+        degreDeSimilarite = 1;
+    } else {
+        degreDeSimilarite = (double) min / max;
+    }
     return degreDeSimilarite;
 }
 
 double similarite(struct g_cycles g1, struct g_cycles g2){
     double degreDeSimilarite;
     double degre = 0;
-
     degre += comparaisonNbreDeCycles(g1, g2);
     degre += comparaisonTailleDeCycles(g1, g2);
     degre += comparaisonNbreVoisinsDeCycle(g1, g2);
@@ -132,80 +142,92 @@ double similarite(struct g_cycles g1, struct g_cycles g2){
 }
 
 // Calculer les similarités entre les graphes de cycles et stocker le résultat dans un fichier
-void calculSimilarite(struct g_cycles *liste, int size){
+void calculSimilarite(struct g_cycles **liste, int size){
     //Création du sous dossier
     #ifdef _WIN32
         system("mkdir similarite 2> nul"); // Pour Windows
     #else
-        system("mkdir -p g_mol 2> /dev/null"); // Pour Linux/Unix
+        system("mkdir -p similarite 2> /dev/null"); // Pour Linux/Unix
     #endif
-
-    double **tab = malloc(size * sizeof(double*));
-    
+    /*
     for (int i = 0; i < size; i++)
     {
+        //printf("i = %d\n",i);
         tab[i] = malloc(size * sizeof(double));
     }
+    */
     // Calcul du degré de similarité
-    for (int i = 0; i < size; i++)
+    for (int i = 3; i < size; i++)
     {
-        tab[i][i] = 0; // pas de comparaison avec soi-même
-        for (int j = i+1; j < size; j++)
-        {
-            tab[i][j] = similarite(liste[i], liste[j]);
-            tab[j][i] = tab[i][j];
-        } 
-    }
-
-    for (int i = 0; i < size; i++)
-    {
+        double *tab = malloc(size * sizeof(double));
         //Définition d'une sous liste
-        int *sliste = malloc(size * sizeof(int));
+        struct g_cycles **sliste = malloc(size * sizeof(struct g_cycles *));
+        for (int y = 0; y < size; y++) {
+            tab[y] = 0.0;
+            sliste[y] = liste[y];
+        }
+        
+        for (int j = 3; j < size; j++)
+        {
+            tab[j] = similarite(*liste[i], *liste[j]);
+        }
+        
+        // Tri décroissant par ligne
         for (int k = 0; k < size; k++)
         {
-            sliste[k] = liste[k].Id;
-        }
-
-        // Tri décroissant par ligne
-        for (int k = 0; k < size-1; k++)
-        {
-            for (int j = 1; j < size; j++)
+            for (int j = 0; j < size; j++)
             { 
-                if(tab[i][k] < tab[i][j])
+                if(tab[k] > tab[j])
                 {
-                    int x = sliste[k];
-                    double c = tab[i][k];
+                    //struct g_cycles *x = malloc(sizeof(struct g_cycles));
+                    struct g_cycles *x = sliste[k];
+                    double c = tab[k];
 
-                    tab[i][k] = tab[i][j];
+                    tab[k] = tab[j];
                     sliste[k] = sliste[j];
 
-                    tab[i][j] = c;
-                    sliste[j] = x;    
+                    tab[j] = c;
+                    sliste[j] = x; 
+                    //free(x);   
                 }
             } 
         }
 
         // Créer un nom de fichier
         char filename[50];
-        sprintf(filename, "similarite/similarite_%d.txt", liste[i].Id);
+        sprintf(filename, "similarite/similarite_%d.txt", liste[i]->Id);
         // Ouvrir le fichier en écriture
         FILE *fichier = fopen(filename, "w");
         if (fichier == NULL) {
             fprintf(stderr, "Erreur lors de l'ouverture du fichier %s\n", filename);
             exit(EXIT_FAILURE);
+        } else  {
+            printf("JE SUIS L°\n");
+            fflush(stdout);
         }
 
         //Enregistrement
-        for (int j = 0; j < size; j++)
+        for (int y = 0; y < size; y++)
         {
-            // Écriture dans le fichier
+            if (tab[y] != 0.0) {// Écriture dans le fichier
             //fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
-            fprintf(fichier, "%lf  %d", tab[i][j], sliste[j]);
+            printf("\n%d\t%lf",y,tab[y]);
+            fprintf(fichier, " Degré de similarité de %lf avec le graphe moléculaire : %d", tab[y],
+             sliste[y]->Id);
             fprintf(fichier, "\n");
+            fprintf(fichier, "\nTaille de la base de cycle : %d\t",sliste[y]->nb_cycles);
+            fprintf(fichier, "\ttaille des cycles de la base : ");
+            for(int x = 0; x < sliste[y]->nb_cycles; x++){
+                //printf("%d %d fdbd\n", y, x);
+                fprintf(fichier, " %d ,",sliste[y]->generateur[x].taille);
+            }
+            fprintf(fichier, "\n");}
         }
         // Fermer le fichier
         fclose(fichier); 
-    }  
+        free(tab); 
+    }
+
 }
 
 //retrouver les 100 premiers graphes les plus similaire au graphe passé en paramètres
@@ -264,10 +286,21 @@ void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la tai
         }
     }
 
-    for(int i = 0; i<nbClasseEqui;i++){
-        printf("Classe %d : ",i);
-        for(int j=0; j<indiceClasse[i];j++){
-            printf("%d ",ClasseEquivalence[i][j]);
+    for (int i = 0; i < nbClasseEqui; i++) {
+        printf("Classe %d : ", i);
+        int k = 3;
+        int id1 = ClasseEquivalence[i][0];
+        while (TabGrapheCycle[k]->Id != id1 && k < cpt) {
+            k += 1;
+        }
+        printf("Taille de la base de cycles : %d, Taille des cycles :  ",
+            TabGrapheCycle[k]->nb_cycles);
+        for (int j = 0; j < TabGrapheCycle[k]->nb_cycles; j++) {
+            printf("%d, ", TabGrapheCycle[k]->generateur[j].taille);
+        }
+        printf("\nListe des IDs dans cette classe d'équivalence :");
+        for (int j = 0; j < indiceClasse[i]; j++) {
+            printf("%d ", ClasseEquivalence[i][j]);
         }
         printf("\n");
     }

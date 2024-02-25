@@ -62,7 +62,7 @@ struct g_mol read_g_mol(char *filename) {
     fread(&test, sizeof(struct g_mol), 1, file);
 
     // Affichage des données lues
-    printf("Name: %s , ID: %d\n", test.name, test.Id);
+    //printf("Name: %s , ID: %d\n", test.name, test.Id);
 
     // Fermer le fichier
     fclose(file);

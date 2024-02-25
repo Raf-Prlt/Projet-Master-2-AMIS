@@ -157,6 +157,9 @@ int main() {
 
 */
 
+calculSimilarite(TabGrapheCycle, nb_mol_vues);
+graphesSimilaires(*TabGrapheCycle[5]);
+/*
 printf("\n\nFLAGGY FLAGGY FLAG FLAG COMPARAISON %d\n\n", nb_mol_vues);
 
     int id1 = 4;
@@ -184,9 +187,9 @@ printf("\n\nFLAGGY FLAGGY FLAG FLAG COMPARAISON %d\n\n", nb_mol_vues);
     } else {
       printf("\n\nBOUHOUHOUHÇAMARCHEPAS :/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/:/\n\n");
 
-    }
+    }*/
 
-    classeEquivalences(TabGrapheCycle,nb_mol_vues);
+    //classeEquivalences(TabGrapheCycle,nb_mol_vues);
     closedir(directory);
     return 0;
 }

@@ -246,23 +246,23 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
 
   //printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
-  /*printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
+  // printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
-  for(int i = 0; i<tailleB; i++) {
-     printf("Cycle numéro %d, taille : %d\n",Base[i].Id,Base[i].taille);
-         for (int j = 0; j < sg->nde; j++) {
-        //printf("%d, ", Base[i].liaisons[j]);
-    }
-  }*/
+  // for(int i = 0; i<tailleB; i++) {
+  //    printf("Cycle numéro %d, taille : %d\n",Base[i].Id,Base[i].taille);
+  //        for (int j = 0; j < sg->nde; j++) {
+  //       //printf("%d, ", Base[i].liaisons[j]);
+  //   }
+  // }
 
   TriCroissant(Base, tailleB);
-
-  printf("\nTaille de la base de cycle : %d\t",tailleB);
-  printf("\ttaille des cycles de la base : ");
-  for(int i = 0; i < tailleB; i++){
-    printf(" %d ,",Base[i].taille);
-  }
-  printf("\n");
+  
+  // printf("\nTaille de la base de cycle : %d\t",tailleB);
+  // printf("\ttaille des cycles de la base : ");
+  // for(int i = 0; i < tailleB; i++){
+  //   printf(" %d ,",Base[i].taille);
+  // }
+  // printf("\n");
 
   *tB = tailleB;
 
@@ -638,7 +638,7 @@ struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int 
   GrapheCycle->generateur = Base;
   GrapheCycle->Id = g->Id;
   GrapheCycle->nb_cycles = tailleB;
-  GrapheCycle->molecule = g;
+  GrapheCycle->molecule = NULL;
 
   int Nbliaisons = 0;
 
