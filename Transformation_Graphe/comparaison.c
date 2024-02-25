@@ -228,6 +228,16 @@ void graphesSimilaires(struct g_cycles g1){
     }
 }
 
+int rechercheIndiceAvecId(struct g_cycles **TabGrapheCycle, int cpt, int id){
+    for(int i = 3;i<cpt;i++){
+        if(TabGrapheCycle[i]->Id == id){
+            return i;
+        }
+    }
+    printf("PROBLEME RECHERCHE INDICE !!!\n");
+    return 0;
+    }
+
 void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la taille du tableau
     int ** ClasseEquivalence;
     ClasseEquivalence = malloc(cpt*sizeof(int*));
