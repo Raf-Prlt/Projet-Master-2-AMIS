@@ -228,6 +228,48 @@ void graphesSimilaires(struct g_cycles g1){
     }
 }
 
+void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la taille du tableau
+    int ** ClasseEquivalence;
+    ClasseEquivalence = malloc(cpt*sizeof(int*));
+    for(int i = 0 ; i<cpt;i++){
+        ClasseEquivalence[i] = malloc(cpt*sizeof(int));
+    }
+    int * indiceClasse;
+    indiceClasse = malloc(cpt*sizeof(int));
+    int nbClasseEqui = 0;
+    for(int i = 3;i<cpt;i++){
+        // printf("Coucou %d\n",i);
+        int ajout = 0;
+        for(int j=0;j<nbClasseEqui;j++){
+            if(comparaisonTailleDeCycles(*TabGrapheCycle[i],*TabGrapheCycle[rechercheIndiceAvecId(TabGrapheCycle,cpt,ClasseEquivalence[j][0])])==1){
+                ClasseEquivalence[j][indiceClasse[j]] = TabGrapheCycle[i]->Id;
+                indiceClasse[j]++;
+                ajout = 1;
+            }
+        }
+        if(ajout ==0){
+            ClasseEquivalence[nbClasseEqui][0] = TabGrapheCycle[i]->Id;
+            indiceClasse[nbClasseEqui] = 1;
+            nbClasseEqui++;
+        }
+    }
+
+    for(int i = 0; i<nbClasseEqui;i++){
+        printf("Classe %d : ",i);
+        for(int j=0; j<indiceClasse[i];j++){
+            printf("%d ",ClasseEquivalence[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Libération de la mémoire
+    for (int i = 0; i < cpt; i++) {
+        free(ClasseEquivalence[i]);
+    }
+    free(ClasseEquivalence);
+    free(indiceClasse);
+    printf("OK\n");
+}
 
 // Fonction principale pour faire des tests
 int mainComp() {
