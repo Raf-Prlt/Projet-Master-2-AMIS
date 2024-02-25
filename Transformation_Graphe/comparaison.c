@@ -133,6 +133,13 @@ double similarite(struct g_cycles g1, struct g_cycles g2){
 
 // Calculer les similarités entre les graphes de cycles et stocker le résultat dans un fichier
 void calculSimilarite(struct g_cycles *liste, int size){
+    //Création du sous dossier
+    #ifdef _WIN32
+        system("mkdir similarite 2> nul"); // Pour Windows
+    #else
+        system("mkdir -p g_mol 2> /dev/null"); // Pour Linux/Unix
+    #endif
+
     double **tab = malloc(size * sizeof(double*));
     
     for (int i = 0; i < size; i++)
@@ -149,16 +156,35 @@ void calculSimilarite(struct g_cycles *liste, int size){
             tab[j][i] = tab[i][j];
         } 
     }
-    //Création du sous dossier
-   #ifdef _WIN32
-    system("mkdir similarite 2> nul"); // Pour Windows
-    #else
-        system("mkdir -p g_mol 2> /dev/null"); // Pour Linux/Unix
-    #endif
-    
-    // Enregistrement
+
     for (int i = 0; i < size; i++)
     {
+        //Définition d'une sous liste
+        int *sliste = malloc(size * sizeof(int));
+        for (int k = 0; k < size; k++)
+        {
+            sliste[k] = liste[k].Id;
+        }
+
+        // Tri décroissant par ligne
+        for (int k = 0; k < size-1; k++)
+        {
+            for (int j = 1; j < size; j++)
+            { 
+                if(tab[i][k] < tab[i][j])
+                {
+                    int x = sliste[k];
+                    double c = tab[i][k];
+
+                    tab[i][k] = tab[i][j];
+                    sliste[k] = sliste[j];
+
+                    tab[i][j] = c;
+                    sliste[j] = x;    
+                }
+            } 
+        }
+
         // Créer un nom de fichier
         char filename[50];
         sprintf(filename, "similarite/similarite_%d.txt", liste[i].Id);
@@ -168,11 +194,13 @@ void calculSimilarite(struct g_cycles *liste, int size){
             fprintf(stderr, "Erreur lors de l'ouverture du fichier %s\n", filename);
             exit(EXIT_FAILURE);
         }
+
+        //Enregistrement
         for (int j = 0; j < size; j++)
         {
             // Écriture dans le fichier
             //fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
-            fprintf(fichier, "%lf  %d", tab[i][j], liste[j].Id);
+            fprintf(fichier, "%lf  %d", tab[i][j], sliste[j]);
             fprintf(fichier, "\n");
         }
         // Fermer le fichier
@@ -190,12 +218,12 @@ void graphesSimilaires(struct g_cycles g1){
     char chaine[TAILLE_MAX];
     if (fichier != NULL)
     {
+        //Modification pour afficher juste les 100 premiers
         while (fgets(chaine, TAILLE_MAX, fichier) != NULL) // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
         {
             printf("%s", chaine); // On affiche la chaîne qu'on vient de lire
             
         }
-        // A suivre ...
         fclose(fichier);
     }
 }
