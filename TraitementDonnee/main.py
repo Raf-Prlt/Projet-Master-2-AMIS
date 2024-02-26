@@ -27,11 +27,16 @@ if response.status_code == 200:
     # Iterez à travers les molécules dans le fichier SDF
     for idx, mol in enumerate(molecules_with_cycles):
         if mol is not None:
+            # Obtenez l'identifiant ChEBI de la molécule en accédant à la propriété spécifique
+            chebi_id_with_prefix = mol.GetProp("ChEBI ID")  # Assurez-vous que "ChEBI ID" est le bon nom de champ
+            # Retirez le préfixe "CHEBI:" en faisant un split
+            chebi_id = chebi_id_with_prefix.split(":")[1] if ":" in chebi_id_with_prefix else chebi_id_with_prefix
+
             # Créez une chaîne contenant les données SDF de la molécule
             sdf_data = Chem.MolToMolBlock(mol)
 
-            # Enregistrez la molécule dans un fichier SDF distinct
-            output_filename = f"molecule_{idx + 1}.sdf"
+            # Enregistrez la molécule dans un fichier SDF distinct avec le nom ChEBI_ID
+            output_filename = f"molecule_{chebi_id}.sdf"
             output_file = os.path.join(output_dir, output_filename)
             
             # Utilisez 'with' pour s'assurer que le writer est correctement fermé
@@ -39,6 +44,6 @@ if response.status_code == 200:
                 writer.SetForceV3000(True)
                 writer.write(mol)
 
-            print(f"Molécule {idx + 1} enregistrée dans {output_filename}")
+            print(f"Molécule {idx + 1} avec ChEBI ID {chebi_id} enregistrée dans {output_filename}")
 else:
     print(f"Échec du téléchargement. Statut HTTP: {response.status_code}")
