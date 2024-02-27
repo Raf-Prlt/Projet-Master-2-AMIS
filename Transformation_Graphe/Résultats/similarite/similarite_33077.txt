@@ -1,0 +1,400 @@
+Graphe moléculaire d'ID chEBI : 33077
+Degré de similarité : 1.000000
+Taille de la base de cycle : 2		taille des cycles de la base :  7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 87304
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 5719
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49224
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65386
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65351
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 66473
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 5550
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 36524
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49220
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 38431
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 37513
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 156268
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 155912
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49208
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 156455
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  4 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65353
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 66432
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49207
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49218
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49227
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 138049
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 37518
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49206
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 194155
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 34910
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49221
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49229
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49228
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 27714
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65562
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 16445
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 29694
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 155910
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 85546
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 66472
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 8647
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49214
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 193568
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49204
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65350
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49230
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 173120
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49219
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 66474
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 155911
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 65546
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 66072
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 5552
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 85617
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 85542
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 137563
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49210
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 35712
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 49213
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 138050
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 36536
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 57775
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 63443
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 155906
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 38430
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 180652
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 32137
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 63447
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 31249
+Degré de similarité : 0.875000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 144421
+Degré de similarité : 0.833333
+Taille de la base de cycle : 2		taille des cycles de la base :  7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 27882
+Degré de similarité : 0.833333
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 51074
+Degré de similarité : 0.833333
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 4393
+Degré de similarité : 0.833333
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 23359
+Degré de similarité : 0.833333
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 7 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 29216
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 134064
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 48986
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 38137
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 93943
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 34608
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 23066
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  4 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 195332
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 63746
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 68444
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 29110
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 64281
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 88200
+Degré de similarité : 0.750000
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 59687
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 61148
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 35588
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 70192
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 3762
+Degré de similarité : 0.750000
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 30891
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 138301
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 5128
+Degré de similarité : 0.750000
+Taille de la base de cycle : 3		taille des cycles de la base :  6 , 6 , 7 ,
+
+Graphe moléculaire d'ID chEBI : 61873
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 177359
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 74113
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 10 ,
+
+Graphe moléculaire d'ID chEBI : 63928
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 47771
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 46814
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 156230
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 40279
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  5 , 6 ,
+
+Graphe moléculaire d'ID chEBI : 143153
+Degré de similarité : 0.750000
+Taille de la base de cycle : 2		taille des cycles de la base :  6 , 6 ,
+

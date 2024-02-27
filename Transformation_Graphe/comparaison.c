@@ -145,9 +145,11 @@ double similarite(struct g_cycles g1, struct g_cycles g2){
 void calculSimilarite(struct g_cycles **liste, int size){
     //Création du sous dossier
     #ifdef _WIN32
-        system("mkdir similarite 2> nul"); // Pour Windows
+        system("mkdir Résultats 2> nul"); // Pour Windows
+        system("mkdir Résultats/similarite 2> nul"); // Pour Windows
     #else
-        system("mkdir -p similarite 2> /dev/null"); // Pour Linux/Unix
+        system("mkdir -p Résultats 2> /dev/null"); // Pour Linux/Unix
+        system("mkdir -p Résultats/similarite 2> /dev/null"); // Pour Linux/Unix
     #endif
     /*
     for (int i = 0; i < size; i++)
@@ -159,23 +161,41 @@ void calculSimilarite(struct g_cycles **liste, int size){
     // Calcul du degré de similarité
     for (int i = 3; i < size; i++)
     {
-        double *tab = malloc(size * sizeof(double));
+        double *tab = malloc(100 * sizeof(double));
         //Définition d'une sous liste
-        struct g_cycles **sliste = malloc(size * sizeof(struct g_cycles *));
-        for (int y = 0; y < size; y++) {
+        struct g_cycles **sliste = malloc(100 * sizeof(struct g_cycles *));
+
+        for (int y = 0; y < 100; y++) {
             tab[y] = 0.0;
-            sliste[y] = liste[y];
+            sliste[y] = liste[y+3];
         }
         
         for (int j = 3; j < size; j++)
         {
-            tab[j] = similarite(*liste[i], *liste[j]);
+            double val = similarite(*liste[i], *liste[j]);
+
+            double min = 100.0;
+            int indiceMin = -1;
+
+            for (int t = 0; t < 100; t++) {
+
+              if(min >= tab[t]) {
+                min = tab[t];
+                indiceMin = t;
+              }
+
+            }
+
+            if (val >= min) {
+              tab[indiceMin] = val;
+              sliste[indiceMin] = liste[j];
+            }
         }
         
         // Tri décroissant par ligne
-        for (int k = 0; k < size; k++)
+        for (int k = 0; k < 100; k++)
         {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < 100; j++)
             { 
                 if(tab[k] > tab[j])
                 {
@@ -193,45 +213,51 @@ void calculSimilarite(struct g_cycles **liste, int size){
             } 
         }
 
+        for (int t = 0; t < 100; t++) {
+
+          if (sliste[t]->Id == liste[i]->Id) {
+            struct g_cycles *x = sliste[t];
+            sliste[t] = sliste[0];
+            sliste[0] = x; 
+          }
+        }
+
         // Créer un nom de fichier
         char filename[50];
-        sprintf(filename, "similarite/similarite_%d.txt", liste[i]->Id);
+        sprintf(filename, "Résultats/similarite/similarite_%d.txt", liste[i]->Id);
         // Ouvrir le fichier en écriture
         FILE *fichier = fopen(filename, "w");
         if (fichier == NULL) {
             fprintf(stderr, "Erreur lors de l'ouverture du fichier %s\n", filename);
             exit(EXIT_FAILURE);
-        } else  {
-            printf("JE SUIS L°\n");
-            fflush(stdout);
         }
 
         //Enregistrement
-        for (int y = 0; y < size; y++)
+        for (int y = 0; y < 100; y++)
         {
             if (tab[y] != 0.0) {// Écriture dans le fichier
             //fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
-            printf("\n%d\t%lf",y,tab[y]);
-            fprintf(fichier, " Degré de similarité de %lf avec le graphe moléculaire : %d", tab[y],
-             sliste[y]->Id);
-            fprintf(fichier, "\n");
+            //printf("\n%d\t%lf",y,tab[y]);
+            fprintf(fichier, "Graphe moléculaire d'ID chEBI : %d\nDegré de similarité : %lf", sliste[y]->Id, tab[y]);
             fprintf(fichier, "\nTaille de la base de cycle : %d\t",sliste[y]->nb_cycles);
             fprintf(fichier, "\ttaille des cycles de la base : ");
             for(int x = 0; x < sliste[y]->nb_cycles; x++){
                 //printf("%d %d fdbd\n", y, x);
                 fprintf(fichier, " %d ,",sliste[y]->generateur[x].taille);
             }
-            fprintf(fichier, "\n");}
+            fprintf(fichier, "\n\n");}
         }
         // Fermer le fichier
         fclose(fichier); 
         free(tab); 
+        free(sliste);
     }
 
 }
 
 //retrouver les 100 premiers graphes les plus similaire au graphe passé en paramètres
 void graphesSimilaires(struct g_cycles g1){
+  printf("\n\n--------------ID CHEBI DE LA MOLÉCULE QUERY : %d --------------\n\n",g1.Id);
     char filename[50];
     sprintf(filename, "similarite/similarite_%d.txt", g1.Id);
     // Ouvrir le fichier en mode lecture
@@ -286,23 +312,32 @@ void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la tai
         }
     }
 
+     char filename[50];
+      sprintf(filename, "Résultats/classesEquivalences.txt");
+      // Ouvrir le fichier en écriture
+      FILE *fichier = fopen(filename, "w");
+      if (fichier == NULL) {
+          fprintf(stderr, "Erreur lors de l'ouverture du fichier %s\n", filename);
+          exit(EXIT_FAILURE);
+      }
+
     for (int i = 0; i < nbClasseEqui; i++) {
-        printf("Classe %d : ", i);
+        fprintf(fichier, "Classe %d : ", i);
         int k = 3;
         int id1 = ClasseEquivalence[i][0];
         while (TabGrapheCycle[k]->Id != id1 && k < cpt) {
             k += 1;
         }
-        printf("Taille de la base de cycles : %d, Taille des cycles :  ",
+        fprintf(fichier, "Taille de la base de cycles : %d, Taille des cycles :  ",
             TabGrapheCycle[k]->nb_cycles);
         for (int j = 0; j < TabGrapheCycle[k]->nb_cycles; j++) {
-            printf("%d, ", TabGrapheCycle[k]->generateur[j].taille);
+            fprintf(fichier, "%d, ", TabGrapheCycle[k]->generateur[j].taille);
         }
-        printf("\nListe des IDs dans cette classe d'équivalence :");
+        fprintf(fichier, "\nListe des IDs dans cette classe d'équivalence : ");
         for (int j = 0; j < indiceClasse[i]; j++) {
-            printf("%d ", ClasseEquivalence[i][j]);
+            fprintf(fichier, "%d ", ClasseEquivalence[i][j]);
         }
-        printf("\n");
+        fprintf(fichier, "\n\n");
     }
 
     // Libération de la mémoire
@@ -311,7 +346,7 @@ void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la tai
     }
     free(ClasseEquivalence);
     free(indiceClasse);
-    printf("OK\n");
+    //printf("OK\n");
 }
 
 // Fonction principale pour faire des tests

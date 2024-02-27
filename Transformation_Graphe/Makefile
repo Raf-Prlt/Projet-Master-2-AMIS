@@ -3,7 +3,7 @@ OBJ= $(SRC:.c=.o)
 CFLAGS = -W -Wall -Wextra -pedantic
 
 run: main
-	./main
+	./main parametres.txt
 
 main: $(OBJ) 
 	gcc -o $@ -Lnauty2_8_8/ $^  nauty2_8_8/nauty.a 

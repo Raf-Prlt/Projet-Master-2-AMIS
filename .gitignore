@@ -6,5 +6,4 @@ TraitementDonnee/output_molecules_v3000/*.sdf
 .vscode/c_cpp_properties.json
 .vscode/tasks.json
 Transformation_Graphe/g_mol/*.dat
-Transformation_Graphe/*.txt
 Transformation_Graphe/similarite/*.txt
