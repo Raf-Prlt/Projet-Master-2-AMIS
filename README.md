@@ -5,6 +5,8 @@ Hounguevou Thomas<br>
 Nzamboue Tisseu Hilary<br>
 Préault Rafael<br>
 
+Pour extraire les fichiers de la base de données: ouvrir un terminal dans le dossier TraitementDonnee et excécuter le fichier `main.py`
+
 Pour installer la librairie nauty: ouvrir un terminal dans le dossier nauty2_8_8 et lancer la commande `make`.
 
 Pour utiliser le programme, il faut lancer la commande `make` dans le dossier Transformation_Graphe.<br>
