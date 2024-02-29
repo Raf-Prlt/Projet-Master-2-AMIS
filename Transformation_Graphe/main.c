@@ -121,7 +121,6 @@ int main(int argc, char *argv[]) {
                 printf("Impossible d'ouvrir le fichier");
             }
 
-            // if(strcmp(entry->d_name, "molecule_11181.sdf") == 0) {
             //printf("Ouverture du fichier %18s\n", entry->d_name);
 
             // Conversion en graphe moléculaire
@@ -169,9 +168,6 @@ int main(int argc, char *argv[]) {
 
                       Base = Horton(&cg, tab, &tailleB);
 
-                      //printf("\n\nFLAGGYFLAGGYFLAGFLAG FIN HORTON %d\n\n", tailleB);
-                      //struct g_cycles * GrapheCycle;
-
                       int indiceTab = nb_mol_vues;
                       if(mode == 2) {
                         indiceTab = 0;
@@ -203,7 +199,6 @@ int main(int argc, char *argv[]) {
             // Free et fermeture du fichier
             freeMolecule(molecule, molecule->nb_atomes);
             //printf("Fermeture du fichier %18s\n", entry->d_name);
-            // }
             fclose(file);
             
           

@@ -207,7 +207,6 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
       if(i > A[j].IdA1 && i > A[j].IdA2) {
         if(verifIntersectionVide(&c[i][A[j].IdA1], &c[i][A[j].IdA2], sg->nde, i) && (c[i][A[j].IdA1].taille) > 0 && (c[i][A[j].IdA2].taille > 0)) {
           
-          // printf("sommet %d\t atome 1 : %d\t atome 2: %d\n",i,A[j].IdA1,A[j].IdA2);
           ajoutCycles(Ci, &c[i][A[j].IdA1], &c[i][A[j].IdA2], A[j], cpt, sg->nde, sg);
           cpt++;
 
@@ -227,9 +226,8 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
 
   TriCroissant(Ci, cpt);
 
- /* printf("\n\nFLAGGY FLAG APRÈS TRI\n\n");
 
-  for(int i = 0; i<cpt; i++) {
+  /*for(int i = 0; i<cpt; i++) {
     printf("Cycle numéro %d, taille : %d\n",i,Ci[i].taille);
   }*/
 
@@ -240,13 +238,7 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
     exit(EXIT_FAILURE);
   }
 
-  //printf("\n\nFLAGGY FLAG AVANT EXTRACTION BASE\n\n");
-
   int tailleB = ExtractionBase(Ci, sg->nde, Base, cpt, sg->nv, sg);
-
-  //printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
-
-  // printf("\n\nFLAGGY FLAG APRÈS EXTRACTION BASE\n\n");
 
   // for(int i = 0; i<tailleB; i++) {
   //    printf("Cycle numéro %d, taille : %d\n",Base[i].Id,Base[i].taille);
@@ -312,9 +304,9 @@ void smallest_paths(sparsegraph *sg, chemin **ps_cts_chms) {
 
     //printf("\nNB LIAISONS = %d\n",cptnbArete);
 
-    for(int i = 0; i < cptnbArete; i++) {
-      //printf("liaison %d, atome 1 :%d\tatome 2 : %d\n",i, A[i].IdA1,A[i].IdA2);
-    }
+    /*for(int i = 0; i < cptnbArete; i++) {
+      printf("liaison %d, atome 1 :%d\tatome 2 : %d\n",i, A[i].IdA1,A[i].IdA2);
+    }*/
 
     TriCroissantArete(A, sg->nde/2);
   }
@@ -514,7 +506,7 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
       TabNvCycle[i].liaisons = malloc(m * sizeof(int));
       for(int j = 0; j < sg->nde; j++) {
         TabNvCycle[i].liaisons[j] = 0;
-        //printf("\nFLAGGYFLAGGYFLAGFLAG numéro cycle  : %d\t numéro arête : %d valeur arete : %d\n",i,j,TabNvCycle[i].liaisons[j]);
+        //printf("\n numéro cycle  : %d\t numéro arête : %d valeur arete : %d\n",i,j,TabNvCycle[i].liaisons[j]);
       }
       TabNvCycle[i].Id = -1;
     }
@@ -546,31 +538,6 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
           if (UnionDisjointe/2 <= Base[i].taille && UnionDisjointe/2 <= Base[j].taille) {
             int check = 1;
 
-            /*printf("\n\n");
-
-            for (int w = 0; w < sg->nde; w++) {
-                printf("%d, ", Base[i].liaisons[w]);
-            }
-            
-            printf("\n\n");
-            for (int w = 0; w < sg->nde; w++) {
-                printf("%d, ", Base[j].liaisons[w]);
-            }
-
-            printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",UnionDisjointe);
-
-            printf("\n\n");
-            for (int w = 0; w < sg->nde; w++) {
-                printf("%d, ", TabNvCycle[cptNvCycle].liaisons[w]);
-            }
-
-            printf("\n\n");
-
-            for (int w = 0; w < sg->nv; w++) {
-                printf("%d, ", OcSom[w]);
-            }
-            printf("\n\n");*/
-
             for(int s = 0; s < NbSom; s++) {
               if (OcSom[s] != 2 && OcSom[s] != 0) {
                 check = 0;
@@ -582,7 +549,6 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
               TabNvCycle[cptNvCycle].Id = indicdeId;
               indicdeId++;
               TabNvCycle[cptNvCycle].taille = UnionDisjointe/2;
-              //exit(66);
             }
           }
 
@@ -616,20 +582,12 @@ int  ExtractionBase(struct Cycle *Ci, int m, struct Cycle *Base, int tailleCi, i
     }
 
     free(TabNvCycle);
-
-    //printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",cptNvCycle);
-    //printf("\n\nFLAGGYFLAGGYFLAGFLAG test nb nvx cycles : %d\n\n",tailleBase);
-    
-    //ajouter les nvx cycles trouvés à la base.
-
     free(incidence);
 
     return tailleBase;
 }
 
 struct g_cycles * ConvertBaseIntoGraph(struct g_mol *g, struct Cycle *Base, int tailleB, sparsegraph *sg) {
-
-  //printf("\nHello there\nGENERAL KENOBI\n");
 
   struct g_cycles *GrapheCycle;
 

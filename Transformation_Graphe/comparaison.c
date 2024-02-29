@@ -151,13 +151,7 @@ void calculSimilarite(struct g_cycles **liste, int size){
         system("mkdir -p Résultats 2> /dev/null"); // Pour Linux/Unix
         system("mkdir -p Résultats/similarite 2> /dev/null"); // Pour Linux/Unix
     #endif
-    /*
-    for (int i = 0; i < size; i++)
-    {
-        //printf("i = %d\n",i);
-        tab[i] = malloc(size * sizeof(double));
-    }
-    */
+
     // Calcul du degré de similarité
     for (int i = 3; i < size; i++)
     {
@@ -236,13 +230,11 @@ void calculSimilarite(struct g_cycles **liste, int size){
         for (int y = 0; y < 100; y++)
         {
             if (tab[y] != 0.0) {// Écriture dans le fichier
-            //fprintf(fichier, "%d %d %s %lf", liste[j].Id, liste[j].molecule->Id, liste[j].molecule->name, tab[i][j]);
             //printf("\n%d\t%lf",y,tab[y]);
             fprintf(fichier, "Graphe moléculaire d'ID chEBI : %d\nDegré de similarité : %lf", sliste[y]->Id, tab[y]);
             fprintf(fichier, "\nTaille de la base de cycle : %d\t",sliste[y]->nb_cycles);
             fprintf(fichier, "\ttaille des cycles de la base : ");
             for(int x = 0; x < sliste[y]->nb_cycles; x++){
-                //printf("%d %d fdbd\n", y, x);
                 fprintf(fichier, " %d ,",sliste[y]->generateur[x].taille);
             }
             fprintf(fichier, "\n\n");}
@@ -259,7 +251,7 @@ void calculSimilarite(struct g_cycles **liste, int size){
 void graphesSimilaires(struct g_cycles g1){
   printf("\n\n--------------ID CHEBI DE LA MOLÉCULE QUERY : %d --------------\n\n",g1.Id);
     char filename[50];
-    sprintf(filename, "similarite/similarite_%d.txt", g1.Id);
+    sprintf(filename, "Résultats/similarite/similarite_%d.txt", g1.Id);
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(filename, "r");
     int TAILLE_MAX = 100;
@@ -296,7 +288,7 @@ void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la tai
     indiceClasse = malloc(cpt*sizeof(int));
     int nbClasseEqui = 0;
     for(int i = 3;i<cpt;i++){
-        // printf("Coucou %d\n",i);
+
         int ajout = 0;
         for(int j=0;j<nbClasseEqui;j++){
             if(comparaisonTailleDeCycles(*TabGrapheCycle[i],*TabGrapheCycle[rechercheIndiceAvecId(TabGrapheCycle,cpt,ClasseEquivalence[j][0])])==1){
@@ -346,42 +338,4 @@ void classeEquivalences(struct g_cycles **TabGrapheCycle, int cpt){// cpt la tai
     }
     free(ClasseEquivalence);
     free(indiceClasse);
-    //printf("OK\n");
-}
-
-// Fonction principale pour faire des tests
-int mainComp() {
-    /*
-    struct g_cycles *liste = malloc(3*sizeof(struct g_cycles));
-
-    struct g_cycles g1;
-    struct g_cycles g2;
-    struct g_cycles g3;
-    
-    
-    //Test nombre de cycle
-    printf("Similarité nombre de cycle: %lf \n", comparaisonNbreDeCycles(g1, g2));
-    printf("Similarité nombre de cycle: %lf \n", comparaisonNbreDeCycles(g1, g3));
-
-    //Test taille de cycle
-    printf("Similarité taille de cycle: %lf \n", comparaisonTailleDeCycles(g1, g2));
-    printf("Similarité taille de cycle: %lf \n", comparaisonTailleDeCycles(g1, g3));
-
-    //Test nombre de voisins
-    printf("Similarité nombre de voisins: %lf \n", comparaisonNbreVoisinsDeCycle(g1, g2));
-    printf("Similarité nombre de voisins: %lf \n", comparaisonNbreVoisinsDeCycle(g1, g3));
-
-    //Test poids des arêtes
-    printf("Similarité poids des arêtes: %lf \n", comparaisonPoidsDesArretes(g1, g2));
-    printf("Similarité poids des arêtes: %lf \n", comparaisonPoidsDesArretes(g1, g3));
-
-    //Test similarité
-    printf("Degré de similarité : %lf \n", similarite(g1, g2));
-    printf("Degré de similarité : %lf \n", similarite(g1, g3));
-   
-    //Test calcul des similarités
-    calculSimilarite(liste, 3);
-    graphesSimilaires(g1);
-    */
-   return 0;
 }
